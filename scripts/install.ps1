@@ -2,7 +2,7 @@
 # Usage: irm <url>/install.ps1 | iex
 #    or: .\install.ps1 [-Version X.Y.Z] [-FromSource] [-SourceDir DIR] [-Extras "browser"]
 #
-# Installs Octop into ~/.octop with a uv-managed Python environment.
+# Installs Octop into ~/.mingdian with a uv-managed Python environment.
 
 & {
 param(
@@ -16,7 +16,16 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$OctopHome     = if ($env:OCTOP_HOME) { $env:OCTOP_HOME } else { Join-Path $HOME ".octop" }
+$OctopHome     = if ($env:OCTOP_HOME) {
+    $env:OCTOP_HOME
+} elseif (Test-Path (Join-Path $HOME ".mingdian")) {
+    Join-Path $HOME ".mingdian"
+} elseif (Test-Path (Join-Path $HOME ".octop")) {
+    # Early installs landed in the legacy ~/.octop; keep reusing them.
+    Join-Path $HOME ".octop"
+} else {
+    Join-Path $HOME ".mingdian"
+}
 $OctopVenv     = Join-Path $OctopHome "venv"
 $OctopBin      = Join-Path $OctopHome "bin"
 $PythonVersion = "3.12"
@@ -45,7 +54,7 @@ to install it, or install later from the dashboard. If a system Chrome already
 exists, that download is skipped even with -Extras browser.
 
 Environment:
-  OCTOP_HOME            Installation directory (default: ~/.octop)
+  OCTOP_HOME            Installation directory (default: ~/.mingdian)
   OCTOP_REPO            Git clone URL for -FromSource without -SourceDir
 "@
     exit 0
@@ -309,7 +318,15 @@ New-Item -ItemType Directory -Path $OctopBin -Force | Out-Null
 $wrapperPs1 = Join-Path $OctopBin "octop.ps1"
 @'
 $ErrorActionPreference = "Stop"
-$OctopHome = if ($env:OCTOP_HOME) { $env:OCTOP_HOME } else { Join-Path $HOME ".octop" }
+$OctopHome = if ($env:OCTOP_HOME) {
+    $env:OCTOP_HOME
+} elseif (Test-Path (Join-Path $HOME ".mingdian")) {
+    Join-Path $HOME ".mingdian"
+} elseif (Test-Path (Join-Path $HOME ".octop")) {
+    Join-Path $HOME ".octop"
+} else {
+    Join-Path $HOME ".mingdian"
+}
 $RealBin = Join-Path $OctopHome "venv\Scripts\octop.exe"
 if (-not (Test-Path $RealBin)) {
     Write-Error "Octop environment not found at $OctopHome\venv"
@@ -322,7 +339,9 @@ $cmdWrapper = Join-Path $OctopBin "octop.cmd"
 @'
 @echo off
 set "OCTOP_HOME=%OCTOP_HOME%"
-if "%OCTOP_HOME%"=="" set "OCTOP_HOME=%USERPROFILE%\.octop"
+if "%OCTOP_HOME%"=="" if exist "%USERPROFILE%\.mingdian" set "OCTOP_HOME=%USERPROFILE%\.mingdian"
+if "%OCTOP_HOME%"=="" if exist "%USERPROFILE%\.octop" set "OCTOP_HOME=%USERPROFILE%\.octop"
+if "%OCTOP_HOME%"=="" set "OCTOP_HOME=%USERPROFILE%\.mingdian"
 set "REAL_BIN=%OCTOP_HOME%\venv\Scripts\octop.exe"
 if not exist "%REAL_BIN%" (
     echo Error: Octop environment not found at %OCTOP_HOME%\venv >&2

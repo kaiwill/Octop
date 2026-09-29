@@ -4,7 +4,17 @@ setlocal EnableDelayedExpansion
 REM Octop Installer for Windows (cmd.exe)
 REM Usage: install.bat [-Version X.Y.Z] [-FromSource] [-SourceDir DIR] [-Extras browser] [-Help]
 
-if defined OCTOP_HOME (set "OCTOP_HOME=%OCTOP_HOME%") else (set "OCTOP_HOME=%USERPROFILE%\.octop")
+REM Mirror PathLayout.from_env: explicit OCTOP_HOME wins, then an existing
+REM ~/.mingdian, then a legacy ~/.octop, otherwise a fresh ~/.mingdian.
+if not defined OCTOP_HOME (
+    if exist "%USERPROFILE%\.mingdian" (
+        set "OCTOP_HOME=%USERPROFILE%\.mingdian"
+    ) else if exist "%USERPROFILE%\.octop" (
+        set "OCTOP_HOME=%USERPROFILE%\.octop"
+    ) else (
+        set "OCTOP_HOME=%USERPROFILE%\.mingdian"
+    )
+)
 set "OCTOP_VENV=%OCTOP_HOME%\venv"
 set "OCTOP_BIN=%OCTOP_HOME%\bin"
 set "PYTHON_VERSION=3.12"
@@ -142,7 +152,9 @@ if not exist "%OCTOP_BIN%" mkdir "%OCTOP_BIN%"
 
 echo @echo off > "%OCTOP_BIN%\octop.cmd"
 echo set "OCTOP_HOME=%%OCTOP_HOME%%" >> "%OCTOP_BIN%\octop.cmd"
-echo if "%%OCTOP_HOME%%"=="" set "OCTOP_HOME=%%USERPROFILE%%\.octop" >> "%OCTOP_BIN%\octop.cmd"
+echo if "%%OCTOP_HOME%%"=="" if exist "%%USERPROFILE%%\.mingdian" set "OCTOP_HOME=%%USERPROFILE%%\.mingdian" >> "%OCTOP_BIN%\octop.cmd"
+echo if "%%OCTOP_HOME%%"=="" if exist "%%USERPROFILE%%\.octop" set "OCTOP_HOME=%%USERPROFILE%%\.octop" >> "%OCTOP_BIN%\octop.cmd"
+echo if "%%OCTOP_HOME%%"=="" set "OCTOP_HOME=%%USERPROFILE%%\.mingdian" >> "%OCTOP_BIN%\octop.cmd"
 echo "%%OCTOP_HOME%%\venv\Scripts\octop.exe" %%* >> "%OCTOP_BIN%\octop.cmd"
 
 set "OCTOP_BIN_FOR_PS=%OCTOP_BIN%"

@@ -4,14 +4,24 @@
 #   或: bash scripts/install.sh --from-source  # 从本地源码安装
 #   或: curl -fsSL <url>/install.sh | bash   # 远程安装
 #
-# 将 Octop 安装到 ~/.octop，使用 uv 管理 Python 环境。
+# 将 Octop 安装到 ~/.mingdian，使用 uv 管理 Python 环境。
 # 用户无需预先安装 Python — uv 会处理一切。
 # 安装后会尽量把 octop 链接到已在 PATH 中的目录（如 /usr/local/bin），
 # 当前终端无需 source / 重开即可直接使用。
 set -euo pipefail
 
 # ── 默认配置 ──────────────────────────────────────────────────────────────────
-OCTOP_HOME="${OCTOP_HOME:-$HOME/.octop}"
+# 与 octop.infra.utils.paths.PathLayout.from_env 保持一致：显式 OCTOP_HOME 优先；
+# 否则复用已存在的 ~/.octop（早期安装），全新安装用 ~/.mingdian。
+if [ -z "${OCTOP_HOME:-}" ]; then
+    if [ -d "$HOME/.mingdian" ]; then
+        OCTOP_HOME="$HOME/.mingdian"
+    elif [ -d "$HOME/.octop" ]; then
+        OCTOP_HOME="$HOME/.octop"
+    else
+        OCTOP_HOME="$HOME/.mingdian"
+    fi
+fi
 OCTOP_VENV="$OCTOP_HOME/venv"
 OCTOP_BIN="$OCTOP_HOME/bin"
 PYTHON_VERSION="3.12"
@@ -94,7 +104,7 @@ Note: Playwright Chromium is not downloaded by default. Pass
   even with --extras browser.
 
 Environment variables:
-  OCTOP_HOME              Install directory (default: ~/.octop)
+  OCTOP_HOME              Install directory (default: ~/.mingdian)
   OCTOP_PYPI_MIRROR       PyPI mirror URL (same as --mirror)
   OCTOP_REPO              Git URL to clone (used by --from-source with no local dir)
   HARNESS_AGENT_REPO      octop-harness repo (derived from OCTOP_REPO by default)
@@ -104,7 +114,7 @@ Environment variables:
   PLAYWRIGHT_INSTALL_TIMEOUT  Per-mirror download timeout in seconds (default 600)
 
 Details:
-  Everything is installed into an isolated virtualenv (~/.octop/venv), so the
+  Everything is installed into an isolated virtualenv (~/.mingdian/venv), so the
   system Python is untouched. Playwright Chromium is opt-in (--extras browser):
   1. Playwright Chromium browser (skipped if a system browser exists)
   2. System libraries (Linux: apt/dnf/yum/pacman/zypper; only needed for Chromium)
@@ -914,7 +924,16 @@ cat > "$OCTOP_BIN/octop" << 'WRAPPER'
 # Octop CLI 包装脚本 — 委托给 uv 管理的环境。
 set -euo pipefail
 
-OCTOP_HOME="${OCTOP_HOME:-$HOME/.octop}"
+# 与 PathLayout.from_env 一致：复用已存在的 ~/.octop（早期安装），否则 ~/.mingdian。
+if [ -z "${OCTOP_HOME:-}" ]; then
+    if [ -d "$HOME/.mingdian" ]; then
+        OCTOP_HOME="$HOME/.mingdian"
+    elif [ -d "$HOME/.octop" ]; then
+        OCTOP_HOME="$HOME/.octop"
+    else
+        OCTOP_HOME="$HOME/.mingdian"
+    fi
+fi
 REAL_BIN="$OCTOP_HOME/venv/bin/octop"
 
 if [ ! -x "$REAL_BIN" ]; then
