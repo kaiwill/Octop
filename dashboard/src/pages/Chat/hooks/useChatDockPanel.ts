@@ -169,7 +169,7 @@ export function useChatDockPanel(isMobile: boolean, agentId?: string | null) {
       }
       const ownerId = (fileAgentId || agentId || "").trim() || null;
       const hostAbs = normalizeDockFilePath(path);
-      // Keep host-absolute tool paths. Collapsing ``~/.octop/agents/<id>/…`` to a
+      // Keep host-absolute tool paths. Collapsing ``~/.mingdian/agents/<id>/…`` to a
       // relative key breaks virtual ``root_dir`` nests (bytes live under
       // ``{root}/Users/…/.octop/agents/<id>/…``, not the real agent home).
       const tabPath = isHostAbsolutePath(hostAbs)

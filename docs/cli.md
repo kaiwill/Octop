@@ -26,7 +26,7 @@ Commands:
   chat       [deprecated] Alias for `octop chats`.
   chats      Chat REPL and session management.
   channel    Channel management commands.
-  clean      Remove CLI state or wipe all of ~/.octop.
+  clean      Remove CLI state or wipe all of ~/.mingdian.
   completion Shell completion utilities.
   config     CLI state (base URL, defaults).
   cron       Cron job management commands.
@@ -60,28 +60,28 @@ Octop commands pick one of three transports:
 
 | Layer | When | Login? | Examples |
 |-------|------|--------|----------|
-| **Offline** (local DB only) | Need to read/write `~/.octop` without a running server | No | `init`, `backup`, `plugin`, `agent list`, `chats list/get/create/update/delete`, `cron list`, `user *`, `admin overview/audit`, `models presets/list/active` |
+| **Offline** (local DB only) | Need to read/write `~/.mingdian` without a running server | No | `init`, `backup`, `plugin`, `agent list`, `chats list/get/create/update/delete`, `cron list`, `user *`, `admin overview/audit`, `models presets/list/active` |
 | **Attach** (HTTP / WS) | Need a live `octop run` process (IM, streams, model pulls) | Yes (`octop user login`) | `chats send/repl`, `channel test/probe`, `models ollama-*`, `skills enable/disable`, `provider test` |
 | **Embedded** (in-process) | CLI boots `OctopServer` for a single command | No | `octop acp`, `octop chats repl`, `octop chats send` (defaults to embedded), `octop agent create/from-expert/start/stop/reload` |
 
 The dashboards and HTTP callers manage their own JWTs and do **not**
-share `~/.octop/cli_state.json`.
+share `~/.mingdian/cli_state.json`.
 
 ## `octop init`
 
 Bootstrap a fresh install (DB migrations, JWT secret, first admin).
-Idempotent on the DB; pass `--force` to wipe `~/.octop` first.
+Idempotent on the DB; pass `--force` to wipe `~/.mingdian` first.
 
 ```
 Usage: octop init [OPTIONS]
 
-  Bootstrap an Octop server (~/.octop dir, DB migrations, JWT secret, first admin).
+  Bootstrap an Octop server (~/.mingdian dir, DB migrations, JWT secret, first admin).
 
 Options:
   --admin-username TEXT       [env: OCTOP_ADMIN_USERNAME]
   --admin-password TEXT       [env: OCTOP_ADMIN_PASSWORD]
   --admin-display-name TEXT   [env: OCTOP_ADMIN_DISPLAY_NAME]
-  --force                     Wipe existing ~/.octop contents before bootstrapping.
+  --force                     Wipe existing ~/.mingdian contents before bootstrapping.
   --yes                       Skip all interactive prompts.
   -h, --help                  Show this message and exit.
 ```
@@ -182,13 +182,13 @@ Commands:
 
 `create` and `from-expert` accept `--user` (admin only) to create
 agents on behalf of another user. `use` writes the agent id into
-`~/.octop/cli_state.json` so subsequent commands default to it.
+`~/.mingdian/cli_state.json` so subsequent commands default to it.
 
 ## `octop chats`
 
 Thread CRUD + interactive REPL. The REPL and `send` use an embedded
 server (no separate `octop run` needed); `list` / `get` / `create` /
-`update` / `delete` work fully offline against `~/.octop/octop.db`.
+`update` / `delete` work fully offline against `~/.mingdian/mingdian.db`.
 
 ```
 Usage: octop chats [OPTIONS] COMMAND [ARGS]...
@@ -293,7 +293,7 @@ Commands:
 ## `octop skills`
 
 Per-agent skill enable / disable. All subcommands need a running
-server (the dashboard's Skill Hub and bundled `~/.octop/skills/`
+server (the dashboard's Skill Hub and bundled `~/.mingdian/skills/`
 library are queried at boot).
 
 ```
@@ -357,7 +357,7 @@ Usage: octop backup [OPTIONS] COMMAND [ARGS]...
 
 Commands:
   create     Create a backup archive (DB + workspaces + config).
-  restore    Restore a backup archive into ~/.octop.
+  restore    Restore a backup archive into ~/.mingdian.
   auto       Automatic backup status and one-shot run.
 ```
 
@@ -400,10 +400,10 @@ Options:
 
 ## `octop plugin`
 
-Install and manage third-party plugins (drop into `~/.octop/plugins/`).
+Install and manage third-party plugins (drop into `~/.mingdian/plugins/`).
 The same plugin manager powers the dashboard's "Plugins" page.
 
-Octop also **seeds bundled plugins** into `~/.octop/plugins/` during
+Octop also **seeds bundled plugins** into `~/.mingdian/plugins/` during
 `octop init` and every `octop run` start. They are listed in Admin →
 Plugins but stay **globally disabled** until you turn them on. An id
 already recorded in `config.json` → `bundled_plugins_seeded` is not
@@ -424,7 +424,7 @@ Commands:
 ## `octop acp`
 
 Expose an Octop agent as a stdio JSON-RPC ACP server. Boots a
-standalone `OctopServer` (reads `~/.octop`); does **not** require
+standalone `OctopServer` (reads `~/.mingdian`); does **not** require
 `octop run` to be running.
 
 ```
@@ -443,13 +443,13 @@ runner object schema.
 
 ## `octop clean`
 
-Reset CLI state or wipe the whole `~/.octop` tree. Destructive — read
+Reset CLI state or wipe the whole `~/.mingdian` tree. Destructive — read
 the help carefully.
 
 ```
 Usage: octop clean [OPTIONS]
 
-  Remove CLI state or wipe all of ~/.octop.
+  Remove CLI state or wipe all of ~/.mingdian.
 
 Options:
   --state / --all       What to remove.
@@ -459,7 +459,7 @@ Options:
 
 ## `octop config`
 
-Inspect / edit `~/.octop/cli_state.json` (default base URL, user,
+Inspect / edit `~/.mingdian/cli_state.json` (default base URL, user,
 agent).
 
 ```
@@ -482,7 +482,7 @@ $ octop version                # print the installed octop version
 
 ## CLI state file
 
-`~/.octop/cli_state.json` stores:
+`~/.mingdian/cli_state.json` stores:
 
 ```json
 {

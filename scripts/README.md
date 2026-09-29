@@ -4,7 +4,7 @@
 
 ## 安装 Octop（终端用户）
 
-将 Octop 安装到隔离虚拟环境 `~/.octop/venv`，并创建 `~/.octop/bin/octop` 包装脚本加入 PATH。
+将 Octop 安装到隔离虚拟环境 `~/.mingdian/venv`，并创建 `~/.mingdian/bin/octop` 包装脚本加入 PATH。
 
 ### 远程一键安装（推荐）
 
@@ -48,7 +48,7 @@ Windows PowerShell 等价参数：`-Version`、`-FromSource`、`-SourceDir`、`-
 
 | 变量 | 说明 |
 |------|------|
-| `OCTOP_HOME` | 安装根目录，默认 `~/.octop` |
+| `OCTOP_HOME` | 安装根目录，默认 `~/.mingdian` |
 | `OCTOP_REPO` | `--from-source` 无本地目录时的 git 克隆地址 |
 | `OCTOP_PYPI_MIRROR` | PyPI 镜像（与 `--mirror` 等效） |
 | `PLAYWRIGHT_DOWNLOAD_HOST` | Playwright 浏览器下载镜像（仅 `--extras browser`） |

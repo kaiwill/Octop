@@ -1,4 +1,4 @@
-"""Persisted environment variables at ``~/.octop/env`` (dotenv format)."""
+"""Persisted environment variables at ``~/.mingdian/env`` (dotenv format)."""
 
 from __future__ import annotations
 

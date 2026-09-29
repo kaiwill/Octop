@@ -8,7 +8,7 @@ Layout inspired by [octop-toolkit](https://github.com/veenyi/octop-plugins/tree/
 
 Product plugins shipped with the wheel live in
 `src/octop/infra/agents/plugins/bundled/`. `octop init` and `octop run`
-copy missing ones into `~/.octop/plugins/` and set them **globally off**
+copy missing ones into `~/.mingdian/plugins/` and set them **globally off**
 in `config.json`. Uninstalled ids are not re-copied.
 
 ## Demos

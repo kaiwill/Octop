@@ -62,7 +62,7 @@ Chat through the Web Dashboard, Feishu, DingTalk, QQ, WeChat, Telegram, Discord,
 | 🌐 | **Browser AI+** | Headless Chromium sessions for web automation, screenshots, and remote browsing |
 | 🖥️ | **Remote desktop** | Live screen and input from the dashboard on Linux, Windows, and macOS — remote office work and GUI apps; one-click isolated desktop on headless Linux |
 | 🪟 | **Desktop client** | Native Windows / macOS / Linux apps (and FnOS packages) alongside the web dashboard |
-| 🏠 | **Self-hosted** | Dashboard, CLI, IM channels, and cron in one `octop run` — all data under `~/.octop/` |
+| 🏠 | **Self-hosted** | Dashboard, CLI, IM channels, and cron in one `octop run` — all data under `~/.mingdian/` |
 
 ## 📌 Overview
 
@@ -181,7 +181,7 @@ This roadmap may shift as the community grows; treat it as indicative only.
 ### Prerequisites
 
 - **macOS / Linux / Windows**
-- No pre-installed Python required — the installer uses [uv](https://docs.astral.sh/uv/) to provision Python 3.12 in an isolated venv under `~/.octop/`
+- No pre-installed Python required — the installer uses [uv](https://docs.astral.sh/uv/) to provision Python 3.12 in an isolated venv under `~/.mingdian/`
 - A modern multi-core CPU with a few GB of RAM for the process plus model/embedding caches; enough disk for the database, agent workspaces, and document corpora
 
 ### 1. Install
@@ -213,7 +213,7 @@ source ~/.zshrc   # Zsh
 source ~/.bashrc  # Bash
 ```
 
-The installer places `octop` on your PATH via `~/.octop/bin`. Optional extras:
+The installer places `octop` on your PATH via `~/.mingdian/bin`. Optional extras:
 
 ```bash
 # Download Playwright Chromium for browser automation (skipped if a system Chrome/Chromium is already present)
@@ -238,7 +238,7 @@ See [desktop/README.md](desktop/README.md) for the desktop shell and [fnos/READM
 ```bash
 pip install octop
 # optional local ONNX embedding model cache (Models → Local): pip install "octop[local-embedding]"
-# Downloads catalog weights under ~/.octop/embedding_models; not chat, not Memory.
+# Downloads catalog weights under ~/.mingdian/embedding_models; not chat, not Memory.
 # Browser automation uses the bundled Playwright package; install Chromium via the installer --extras browser,
 # the dashboard, or: python -m playwright install chromium
 ```
@@ -255,7 +255,7 @@ uv sync --extra local-embedding
 octop init
 ```
 
-The interactive wizard creates the SQLite database, JWT secret, and first admin account under `~/.octop/`.
+The interactive wizard creates the SQLite database, JWT secret, and first admin account under `~/.mingdian/`.
 
 ### 3. Run
 
@@ -270,7 +270,7 @@ octop run --host 0.0.0.0 --port 8088
 octop service start
 ```
 
-Open **http://127.0.0.1:8088**. With Docker, the first init generates a random admin password (written to `/data/.octop/credential.txt`) unless `OCTOP_DEFAULT_PASSWORD` is set. Interactive `octop init` / the setup wizard asks you to choose a password (≥8 characters, letters and digits).
+Open **http://127.0.0.1:8088**. With Docker, the first init generates a random admin password (written to `/data/.mingdian/credential.txt`) unless `OCTOP_DEFAULT_PASSWORD` is set. Interactive `octop init` / the setup wizard asks you to choose a password (≥8 characters, letters and digits).
 
 ### Docker (recommended for production)
 
@@ -282,13 +282,13 @@ docker compose -f docker/docker-compose.yml up -d
 bash docker/docker_build.sh
 docker run -d \
   -p 8088:8088 \
-  -v octop-data:/data/.octop \
+  -v octop-data:/data/.mingdian \
   -e HOME=/data \
   -e OCTOP_DEFAULT_PASSWORD="<strong-password-or-omit-for-random>" \
   octop:latest
 ```
 
-Open `http://localhost:8088`. First boot creates the admin account and writes the credentials to `/data/.octop/credential.txt` in the container. With `OCTOP_DEFAULT_PASSWORD` unset a strong random password is generated; a password you set must be ≥8 characters with letters and digits (weak/common passwords are rejected by the app password policy and fall back to a random one). Override the username via `OCTOP_ADMIN_USERNAME`.
+Open `http://localhost:8088`. First boot creates the admin account and writes the credentials to `/data/.mingdian/credential.txt` in the container. With `OCTOP_DEFAULT_PASSWORD` unset a strong random password is generated; a password you set must be ≥8 characters with letters and digits (weak/common passwords are rejected by the app password policy and fall back to a random one). Override the username via `OCTOP_ADMIN_USERNAME`.
 
 > **Password policy:** at least 8 characters with letters and digits.
 
@@ -297,7 +297,7 @@ Open `http://localhost:8088`. First boot creates the admin account and writes th
 | `OCTOP_PORT` | `8088` | HTTP listen port |
 | `OCTOP_DEFAULT_PASSWORD` | _(unset)_ | First-run admin password (Docker bootstrap). Unset = random password written to `credential.txt` |
 | `OCTOP_ADMIN_USERNAME` | `admin` | First-run admin username |
-| `OCTOP_DATA` | `~/.octop` | Host data directory (compose bind mount) |
+| `OCTOP_DATA` | `~/.mingdian` | Host data directory (compose bind mount) |
 
 See [`.env.example`](.env.example) for the full list.
 
@@ -338,11 +338,11 @@ See [`.env.example`](.env.example) for the full list.
 | PyPI | Any | `pip install octop` (optional extras such as `local-embedding`) |
 | Docker | Any | `docker/docker-compose.yml` |
 
-All install scripts provision an isolated environment at `~/.octop/venv` and a `~/.octop/bin/octop` wrapper — they do not touch system Python.
+All install scripts provision an isolated environment at `~/.mingdian/venv` and a `~/.mingdian/bin/octop` wrapper — they do not touch system Python.
 
 ### Upgrade
 
-`octop update` replaces only the wheel/binary — your `~/.octop/` database, workspaces, secrets, and `config.json` are preserved:
+`octop update` replaces only the wheel/binary — your `~/.mingdian/` database, workspaces, secrets, and `config.json` are preserved:
 
 ```bash
 octop update          # fetch and install the latest octop, then restart the service if one is registered
@@ -352,7 +352,7 @@ The schema migrates automatically on next boot; run `octop init` only if the set
 
 ## ⚙️ Configuration
 
-All runtime state lives in `~/.octop/`. Manage it via CLI or edit files directly.
+All runtime state lives in `~/.mingdian/`. Manage it via CLI or edit files directly.
 
 ```bash
 # LLM providers and models
@@ -397,7 +397,7 @@ Other kinds (e.g. Yuanbao, Xiaoyi, MQTT) are available via the gateway — see c
 
 | Command | Description |
 |---------|-------------|
-| `octop init` | Bootstrap `~/.octop/` (DB, admin, JWT secret) |
+| `octop init` | Bootstrap `~/.mingdian/` (DB, admin, JWT secret) |
 | `octop run` | Start Octop in the foreground |
 | `octop service start` | Install and start as a system service |
 | `octop service stop` | Stop the system service |
@@ -410,7 +410,7 @@ Other kinds (e.g. Yuanbao, Xiaoyi, MQTT) are available via the gateway — see c
 | `octop skills` | Enable/disable per-agent skills |
 | `octop plugin` | Install and manage third-party plugins |
 | `octop backup` | Export / restore backups |
-| `octop clean` | Remove CLI state or wipe `~/.octop/` |
+| `octop clean` | Remove CLI state or wipe `~/.mingdian/` |
 | `octop memory list` | List running agents eligible for memory maintenance; no database changes. |
 | `octop memory slim [--agent ID]` | Back up and slim SQLite memory through the running host; uses the selected agent or prompts by number. Shows terminal and dashboard progress. [Details](docs/memory-slim.md) |
 | `octop memory slim --all` | Sequentially maintain all eligible running agents, with per-agent progress; stops on the first failure. |
@@ -448,9 +448,9 @@ Interactive API docs: **http://127.0.0.1:8088/api/docs** (disabled by default �
 ## 📁 Data directory
 
 ```
-~/.octop/                          ← install & data root
+~/.mingdian/                          ← install & data root
 ├── config.json                    # process config (optional database section)
-├── octop.db                       # SQLite — users, agents, channels, cron, …
+├── mingdian.db                       # SQLite — users, agents, channels, cron, …
 ├── secrets/                       # JWT secret, channel tokens
 ├── agents/<agent_id>/             # per-agent workspace (SOUL.md, skills, …)
 ├── security/tool_guard/           # shell command allow/deny rules
@@ -520,10 +520,10 @@ Individual targets: `make test`, `make lint`, `make typecheck`, `make format`.
 
 ## 🔒 Security & privacy
 
-- **Local-first**: Config, chats, workspaces, and credentials live under `~/.octop/` on your machine.
+- **Local-first**: Config, chats, workspaces, and credentials live under `~/.mingdian/` on your machine.
 - **Multi-user isolation**: JWT auth with per-user agents and workspaces.
 - **PII redaction & tool approval**: sensitive data is redacted before it leaves the workspace, and risky tools or shell commands require explicit approval under the guardrail rules.
-- **Tool guardrails**: User-editable shell command rules under `~/.octop/security/tool_guard/`.
+- **Tool guardrails**: User-editable shell command rules under `~/.mingdian/security/tool_guard/`.
 - **No vendor lock-in**: Swap LLM providers, storage backends, and channels without rewriting agents.
 
 ## 🤝 Contributing

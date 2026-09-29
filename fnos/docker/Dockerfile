@@ -98,7 +98,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ENV PATH="/app/.venv/bin:$PATH" \
     PLAYWRIGHT_BROWSERS_PATH=/root/.cache/ms-playwright
 
-RUN mkdir -p /data/.octop
+RUN mkdir -p /data/.mingdian
 
 EXPOSE 8088
 

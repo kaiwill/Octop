@@ -1,6 +1,6 @@
 """Inject platform execute defaults into harness backend specs.
 
-Global admin env (``~/.octop/env``) and workspace ``.env`` are merged at
+Global admin env (``~/.mingdian/env``) and workspace ``.env`` are merged at
 **execute** time inside harness (``inherit_env`` / ``environment_file`` /
 ``BackendWorkspace`` reader) — not snapshotted here.
 

@@ -61,7 +61,7 @@
 | 🌐 | **浏览器 AI+** | 基于 Chromium 的无头浏览器会话，支持网页自动化、截图与远程操控 |
 | 🖥️ | **远程桌面** | 控制台内实时看屏与键鼠操控，跨 Linux / Windows / macOS；适合远程办公、GUI 软件操作，无图形 Linux 可一键搭建隔离桌面 |
 | 🪟 | **桌面客户端** | Windows / macOS / Linux 原生应用，另有飞牛（FnOS）安装包，可与 Web 控制台并行使用 |
-| 🏠 | **可自托管** | 一条 `octop run` 即可运行控制台、CLI、IM 通道与定时任务，数据存于 `~/.octop/` |
+| 🏠 | **可自托管** | 一条 `octop run` 即可运行控制台、CLI、IM 通道与定时任务，数据存于 `~/.mingdian/` |
 
 ## 📌 概述
 
@@ -104,7 +104,7 @@ Octop 基于一系列 Octop Harness 工程实践构建——它将这些专注�
 - **[Octop Memory](https://github.com/TencentCloud/octop-memory)** — 分层记忆与全文检索，让 Agent 的记忆随工作区一同迁移。
 - **[Octop Browser](https://github.com/TencentCloud/octop-browser)** — 基于 CDP 的浏览器自动化，支持持久化配置，用于网页类任务。
 
-Octop 不依赖外部消息队列或中间件，而是通过进程内的 `HarnessProcessor` 统一路由所有入口——Web UI、IM 与定时任务。最终呈现为一个可重启恢复的单进程：启动时整个状态都从控制面数据库重建（默认 `~/.octop/octop.db`，亦可配置 PostgreSQL）。
+Octop 不依赖外部消息队列或中间件，而是通过进程内的 `HarnessProcessor` 统一路由所有入口——Web UI、IM 与定时任务。最终呈现为一个可重启恢复的单进程：启动时整个状态都从控制面数据库重建（默认 `~/.mingdian/mingdian.db`，亦可配置 PostgreSQL）。
 
 ## 🤔 功能特性
 
@@ -182,7 +182,7 @@ Octop 支持两个方向的 ACP 集成：
 ### 环境要求
 
 - **macOS / Linux / Windows**
-- 无需预先安装 Python — 安装脚本通过 [uv](https://docs.astral.sh/uv/) 在 `~/.octop/` 下创建隔离的 Python 3.12 虚拟环境
+- 无需预先安装 Python — 安装脚本通过 [uv](https://docs.astral.sh/uv/) 在 `~/.mingdian/` 下创建隔离的 Python 3.12 虚拟环境
 - 现代多核 CPU，并预留数 GB 内存供进程与模型/Embedding 缓存使用；磁盘需容纳数据库、Agent 工作区与文档语料
 
 ### 1. 安装
@@ -214,7 +214,7 @@ source ~/.zshrc   # Zsh
 source ~/.bashrc  # Bash
 ```
 
-安装脚本会将 `octop` 加入 PATH（`~/.octop/bin`）。可选附加组件：
+安装脚本会将 `octop` 加入 PATH（`~/.mingdian/bin`）。可选附加组件：
 
 ```bash
 # 下载 Playwright Chromium 用于浏览器自动化（若系统已有 Chrome / Chromium 则会跳过）
@@ -239,7 +239,7 @@ curl -fsSL https://finnie-1258344699.cos.ap-guangzhou.myqcloud.com/octop/install
 ```bash
 pip install octop
 # 可选本地 ONNX Embedding 模型缓存（设置 → 模型 → 本地）：pip install "octop[local-embedding]"
-# 仅下载目录模型到 ~/.octop/embedding_models；不用于对话，也不接入 Memory。
+# 仅下载目录模型到 ~/.mingdian/embedding_models；不用于对话，也不接入 Memory。
 # 浏览器自动化依赖已内置 Playwright；Chromium 可通过安装脚本 --extras browser、
 # 控制台，或执行：python -m playwright install chromium
 ```
@@ -256,7 +256,7 @@ uv sync --extra local-embedding
 octop init
 ```
 
-交互式向导会在 `~/.octop/` 下创建 SQLite 数据库、JWT 密钥，并引导你设置首个管理员账号。
+交互式向导会在 `~/.mingdian/` 下创建 SQLite 数据库、JWT 密钥，并引导你设置首个管理员账号。
 
 ### 3. 启动
 
@@ -271,7 +271,7 @@ octop run --host 0.0.0.0 --port 8088
 octop service start
 ```
 
-打开 **http://127.0.0.1:8088**。Docker 首次初始化会自动生成随机管理员密码（写入 `/data/.octop/credential.txt`），除非设置了 `OCTOP_DEFAULT_PASSWORD`。交互式 `octop init` / 设置向导会让你自行设置密码（至少 8 位，且同时包含字母和数字）。
+打开 **http://127.0.0.1:8088**。Docker 首次初始化会自动生成随机管理员密码（写入 `/data/.mingdian/credential.txt`），除非设置了 `OCTOP_DEFAULT_PASSWORD`。交互式 `octop init` / 设置向导会让你自行设置密码（至少 8 位，且同时包含字母和数字）。
 
 ### Docker（推荐用于生产部署）
 
@@ -283,13 +283,13 @@ docker compose -f docker/docker-compose.yml up -d
 bash docker/docker_build.sh
 docker run -d \
   -p 8088:8088 \
-  -v octop-data:/data/.octop \
+  -v octop-data:/data/.mingdian \
   -e HOME=/data \
   -e OCTOP_DEFAULT_PASSWORD="<自定义强密码，留空则自动生成随机密码>" \
   octop:latest
 ```
 
-打开 `http://localhost:8088`。首次初始化会创建管理员账号，并把凭据写入容器内 `/data/.octop/credential.txt`。未设置 `OCTOP_DEFAULT_PASSWORD` 时自动生成随机强密码；自行设置的密码须 ≥8 位且同时包含字母和数字（被应用密码策略拒绝的常见弱密码会自动回退为随机密码）。可通过 `OCTOP_ADMIN_USERNAME` 覆盖用户名。
+打开 `http://localhost:8088`。首次初始化会创建管理员账号，并把凭据写入容器内 `/data/.mingdian/credential.txt`。未设置 `OCTOP_DEFAULT_PASSWORD` 时自动生成随机强密码；自行设置的密码须 ≥8 位且同时包含字母和数字（被应用密码策略拒绝的常见弱密码会自动回退为随机密码）。可通过 `OCTOP_ADMIN_USERNAME` 覆盖用户名。
 
 > **密码策略：** 至少 8 位，且同时包含字母和数字。
 
@@ -298,7 +298,7 @@ docker run -d \
 | `OCTOP_PORT` | `8088` | HTTP 监听端口 |
 | `OCTOP_DEFAULT_PASSWORD` | _(未设置)_ | 首次运行管理员密码（Docker 引导）。未设置 = 自动生成随机密码并写入 `credential.txt` |
 | `OCTOP_ADMIN_USERNAME` | `admin` | 首次运行管理员用户名 |
-| `OCTOP_DATA` | `~/.octop` | 宿主机数据目录（compose 挂载） |
+| `OCTOP_DATA` | `~/.mingdian` | 宿主机数据目录（compose 挂载） |
 
 完整变量列表见 [`.env.example`](.env.example)。
 
@@ -340,11 +340,11 @@ docker run -d \
 | PyPI | 全平台 | `pip install octop`（可选 extras 如 `local-embedding`） |
 | Docker | 全平台 | `docker/docker-compose.yml` |
 
-所有安装脚本均在 `~/.octop/venv` 创建隔离环境，并通过 `~/.octop/bin/octop` 包装 CLI，不会影响系统 Python。
+所有安装脚本均在 `~/.mingdian/venv` 创建隔离环境，并通过 `~/.mingdian/bin/octop` 包装 CLI，不会影响系统 Python。
 
 ### 升级
 
-`octop update` 只替换 wheel / 二进制，你的 `~/.octop/` 数据库、工作区、密钥与 `config.json` 均会保留：
+`octop update` 只替换 wheel / 二进制，你的 `~/.mingdian/` 数据库、工作区、密钥与 `config.json` 均会保留：
 
 ```bash
 octop update          # 获取并安装最新版 Octop，若已注册系统服务则自动重启
@@ -354,7 +354,7 @@ octop update          # 获取并安装最新版 Octop，若已注册系统服�
 
 ## ⚙️ 配置
 
-所有运行时数据存放在 `~/.octop/`。可通过 CLI 管理，也可直接编辑文件。
+所有运行时数据存放在 `~/.mingdian/`。可通过 CLI 管理，也可直接编辑文件。
 
 ```bash
 # LLM 供应商与模型
@@ -397,7 +397,7 @@ OpenAI 兼容 API、DashScope（千问）、Ollama 等预设 — 在控制台或
 
 | 命令 | 说明 |
 |------|------|
-| `octop init` | 初始化 `~/.octop/`（数据库、管理员、JWT 密钥） |
+| `octop init` | 初始化 `~/.mingdian/`（数据库、管理员、JWT 密钥） |
 | `octop run` | 前台启动 Octop |
 | `octop service start` | 安装并启动系统服务 |
 | `octop service stop` | 停止系统服务 |
@@ -410,7 +410,7 @@ OpenAI 兼容 API、DashScope（千问）、Ollama 等预设 — 在控制台或
 | `octop skills` | 按 Agent 启用/禁用 Skill |
 | `octop plugin` | 安装并管理第三方插件 |
 | `octop backup` | 导出 / 恢复备份 |
-| `octop clean` | 清理 CLI 状态或清空 `~/.octop/` |
+| `octop clean` | 清理 CLI 状态或清空 `~/.mingdian/` |
 | `octop memory list` | 列出可参与记忆维护的运行中 Agent；不改动数据库。 |
 | `octop memory slim [--agent ID]` | 通过运行中的宿主备份并精简 SQLite 记忆；使用指定 Agent 或按提示选择。在终端与控制台显示进度。[详情](docs/memory-slim.md) |
 | `octop memory slim --all` | 依次维护所有符合条件的运行中 Agent，逐个显示进度；首个失败即停止。 |
@@ -448,9 +448,9 @@ OpenAI 兼容 API、DashScope（千问）、Ollama 等预设 — 在控制台或
 ## 📁 数据目录
 
 ```
-~/.octop/                          ← 安装与数据根目录
+~/.mingdian/                          ← 安装与数据根目录
 ├── config.json                    # 进程配置（含可选 database 段）
-├── octop.db                       # 默认 SQLite 控制面（用户、Agent、通道、定时任务 …）
+├── mingdian.db                       # 默认 SQLite 控制面（用户、Agent、通道、定时任务 …）
 ├── secrets/                       # JWT 密钥、通道 Token
 ├── agents/<agent_id>/             # 各 Agent 工作区（SOUL.md、skills …）
 ├── security/tool_guard/           # Shell 命令允许/拒绝规则
@@ -521,10 +521,10 @@ cd dashboard && npx tsc -b
 
 ## 🔒 安全与隐私
 
-- **本地优先**：配置、对话、工作区与凭证均存储在 `~/.octop/`。
+- **本地优先**：配置、对话、工作区与凭证均存储在 `~/.mingdian/`。
 - **多用户隔离**：JWT 认证，按用户隔离 Agent 与工作区。
 - **敏感信息脱敏与工具审批**：离开工作区前自动脱敏敏感数据；高风险工具或 Shell 命令需依据护栏规则显式审批。
-- **工具护栏**：可在 `~/.octop/security/tool_guard/` 编辑 Shell 命令规则。
+- **工具护栏**：可在 `~/.mingdian/security/tool_guard/` 编辑 Shell 命令规则。
 - **无厂商锁定**：可自由切换 LLM 供应商、存储后端与 IM 通道。
 
 ## 🤝 参与贡献

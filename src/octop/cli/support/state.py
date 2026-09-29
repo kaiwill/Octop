@@ -11,7 +11,7 @@ from octop.infra.utils.paths import PathLayout
 
 
 def default_state_path() -> Path:
-    """Default location for the CLI state file (``~/.octop/cli_state.json``)."""
+    """Default location for the CLI state file (``~/.mingdian/cli_state.json``)."""
     return PathLayout.from_env().root / "cli_state.json"
 
 

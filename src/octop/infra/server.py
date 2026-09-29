@@ -552,7 +552,7 @@ class OctopServer:
         log_dir.mkdir(parents=True, exist_ok=True)
         log_path = self.paths.log
 
-        # Migrate the legacy single-file log (~/.octop/octop.log) into the new logs dir.
+        # Migrate the legacy single-file log (~/.mingdian/octop.log) into the new logs dir.
         legacy = self.paths.root / "octop.log"
         if legacy.exists() and not log_path.exists():
             with suppress(OSError):

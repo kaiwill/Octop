@@ -2605,7 +2605,7 @@
   },
   "environments": {
     "title": "环境变量",
-    "description": "全局变量保存在 ~/.octop/env，所有智能体的 shell / Docker 会继承。单个智能体的变量写入其工作区 .env，执行时覆盖同名全局变量。搜索类 API Key 请放全局，以便工具完成注册。",
+    "description": "全局变量保存在 ~/.mingdian/env，所有智能体的 shell / Docker 会继承。单个智能体的变量写入其工作区 .env，执行时覆盖同名全局变量。搜索类 API Key 请放全局，以便工具完成注册。",
     "secretGuide": "需要腾讯云密钥？",
     "secretGuideLink": "前往获取",
     "key": "键",
@@ -3353,7 +3353,7 @@
       "releaseNotes": "更新说明",
       "updateModalTitle": "发现新版本",
       "guideTitle": "按安装方式更新",
-      "guideIntro": "若不能使用左侧一键升级，请按你的安装方式选择下方命令。升级后请重启服务；配置与数据默认保留在 ~/.octop（或 OCTOP_HOME）。",
+      "guideIntro": "若不能使用左侧一键升级，请按你的安装方式选择下方命令。升级后请重启服务；配置与数据默认保留在 ~/.mingdian（或 OCTOP_HOME）。",
       "guideDataNote": "升级不会清空本机数据：用户账号、专家、对话与记忆、技能、通道与模型配置等均保存在工作目录中，重新安装或更新软件本身即可继续使用。",
       "guide": {
         "ui": {
@@ -3362,7 +3362,7 @@
         },
         "installer": {
           "title": "一键安装脚本",
-          "body": "若你是用官方安装脚本装的，重新执行同一安装命令即可自动升级到最新版（会复用 ~/.octop 下的环境与数据）。"
+          "body": "若你是用官方安装脚本装的，重新执行同一安装命令即可自动升级到最新版（会复用 ~/.mingdian 下的环境与数据）。"
         },
         "cli": {
           "title": "CLI：octop update",
@@ -3378,7 +3378,7 @@
         },
         "docker": {
           "title": "Docker",
-          "body": "Docker 部署请重新构建并启动镜像，并继续挂载原有数据卷（~/.octop 或 octop-data），避免丢数据："
+          "body": "Docker 部署请重新构建并启动镜像，并继续挂载原有数据卷（~/.mingdian 或 octop-data），避免丢数据："
         },
         "restart": {
           "title": "升级后重启",
@@ -4664,7 +4664,7 @@
       "hint": "首次启动时，服务端会在控制台打印一次性引导密码，并写入下方路径所示文件。",
       "whereTitle": "在哪里找到密码？",
       "wherePath": "在服务器上打开 {{path}}，或查看启动华同明典 时终端里黄色边框的输出。",
-      "whereDefault": "在服务器上打开 ~/.octop/octop-login.txt，或查看启动华同明典 时终端里黄色边框的输出。",
+      "whereDefault": "在服务器上打开 ~/.mingdian/octop-login.txt，或查看启动华同明典 时终端里黄色边框的输出。",
       "missingFile": "未找到引导密码文件。请在没有用户的状态下重启服务器以重新生成。",
       "wrong": "密码错误。",
       "rateLimited": "尝试次数过多，请稍后重试。",
@@ -4933,7 +4933,7 @@
     "forgotPasswordHint": "可省略 --password，改为交互输入。新密码至少 8 位，需同时包含字母和数字。",
     "forgotPasswordLinux": "打开「终端」后执行上面的命令。若提示找不到 octop，改用：",
     "forgotPasswordMac": "打开「终端」（应用程序 → 实用工具 → 终端）后执行。若提示找不到 octop，改用：",
-    "forgotPasswordUnixPath": "~/.octop/bin/octop user passwd <用户名> --password <新密码>",
+    "forgotPasswordUnixPath": "~/.mingdian/bin/octop user passwd <用户名> --password <新密码>",
     "forgotPasswordWindows": "打开 PowerShell 或「命令提示符」后执行上面的命令。若提示找不到 octop，改用：",
     "forgotPasswordWindowsPs": "& \"$env:USERPROFILE\\.octop\\bin\\octop.cmd\" user passwd <用户名> --password <新密码>",
     "forgotPasswordWindowsCmdLabel": "命令提示符",
@@ -5678,7 +5678,7 @@
     "uninstallFailed": "卸载失败",
     "uninstallConfirm": "确定卸载插件 {{id}}？",
     "empty": "尚未安装插件",
-    "adminHint": "插件安装在服务器 ~/.octop/plugins/。此页面仅用于安装、重载、全局启停、查看详情和卸载。",
+    "adminHint": "插件安装在服务器 ~/.mingdian/plugins/。此页面仅用于安装、重载、全局启停、查看详情和卸载。",
     "guideTitle": "如何开发并导入插件",
     "guideDevelopTitle": "1. 开发",
     "guideDevelopBody": "创建一个包含 plugin.yaml 与入口 Python 文件（如 main.py）的目录。plugin.yaml 需包含 id、version、name、kind（tool / skill / hook）和 entry。setup(ctx) 中：tool → ctx.tool(...)；skill → ctx.skills(\"skills\")；hook → ctx.middleware(...)。仓库 plugins/ 下有三类 demo 可参考。",

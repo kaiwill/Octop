@@ -256,7 +256,7 @@ async def _fill_missing_subagent_colors(agent: Any, rows: list[dict[str, Any]]) 
 # Data types
 # ---------------------------------------------------------------------------
 
-# Custom agent ids become workspace directory names (~/.octop/agents/<id>/),
+# Custom agent ids become workspace directory names (~/.mingdian/agents/<id>/),
 # so restrict to a conservative slug charset — no separators, dots, or
 # unicode — to keep every downstream path/URL usage safe.
 _CUSTOM_AGENT_ID_RE = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_-]{1,62}[a-zA-Z0-9]$")

@@ -299,7 +299,7 @@ CLI (octop run)
   └─► launch.run_foreground_blocking()
        └─► launch.run_foreground() (async)
             ├─► OctopServer.__init__()
-            │    └─► PathLayout(~/.octop)
+            │    └─► PathLayout(~/.mingdian)
             ├─► OctopServer.start()
             │    ├─► paths.ensure_root()           # 创建目录树
             │    ├─► apply_env_file()               # 加载 .env
@@ -596,7 +596,7 @@ async def _start_agent(self, row: AgentRow) -> None:
 每个 Agent 拥有独立的工作空间目录：
 
 ```
-~/.octop/agents/<agent_id>/
+~/.mingdian/agents/<agent_id>/
 ├── SOUL.md              # Agent 人格定义
 ├── skills/              # 工作空间技能
 │   └── my-skill/
@@ -623,7 +623,7 @@ async def _start_agent(self, row: AgentRow) -> None:
 class ExpertCatalog:
     def __init__(self, paths: PathLayout):
         self._bundled = self._load_bundled()  # 从 src/octop/infra/agents/experts/catalog/
-        self._user = self._load_user()         # 从 ~/.octop/experts/
+        self._user = self._load_user()         # 从 ~/.mingdian/experts/
 
     def list_all(self) -> list[ExpertEntry]: ...
     def get(self, slug: str) -> ExpertEntry | None: ...
@@ -1229,8 +1229,8 @@ Use this tool to do something useful.
 
 | 来源 | 位置 | 说明 |
 |------|------|------|
-| 工作空间 | `~/.octop/agents/<id>/skills/` | Agent 本地技能 |
-| 全局包 | `~/.octop/skill_packages/` | 全局共享技能包 |
+| 工作空间 | `~/.mingdian/agents/<id>/skills/` | Agent 本地技能 |
+| 全局包 | `~/.mingdian/skill_packages/` | 全局共享技能包 |
 | SkillHub | 远程市场 | 从 SkillHub 下载安装 |
 
 ### 15.3 技能包管理
@@ -1405,7 +1405,7 @@ POST /api/admin/sso/providers
 
 ### 18.1 插件结构
 
-插件位于 `~/.octop/plugins/` 或项目 `plugins/` 目录：
+插件位于 `~/.mingdian/plugins/` 或项目 `plugins/` 目录：
 
 ```
 my-plugin/
@@ -1432,7 +1432,7 @@ my-plugin/
 
 class PluginManager:
     async def seed_bundled(self) -> None:
-        """将内置插件复制到 ~/.octop/plugins/"""
+        """将内置插件复制到 ~/.mingdian/plugins/"""
         ...
 
     async def load_installed(self, install_deps: bool = True) -> None:
@@ -1775,7 +1775,7 @@ def get_tools() -> list:
 
 ```bash
 # 查看 Agent 日志
-tail -f ~/.octop/logs/octop.log
+tail -f ~/.mingdian/logs/octop.log
 
 # 检查 Agent 状态
 octop agent list --json

@@ -1,15 +1,15 @@
 # Configuration
 
-Octop stores all of its state under `~/.octop/`. The directory is created
+Octop stores all of its state under `~/.mingdian/`. The directory is created
 on first server start (or by `octop init` / `octop run`).
 
 ## Filesystem layout
 
 ```
-~/.octop/
+~/.mingdian/
 ├── config.json              # process-level settings (host, port, CORS, DB, TLS, …)
 ├── env                      # optional dotenv (OCTOP_DATABASE_*, API keys, …); loaded at server start
-├── octop.db                 # SQLite — users, agents, providers, sessions, audit
+├── mingdian.db                 # SQLite — users, agents, providers, sessions, audit
 ├── cli_state.json           # CLI token + pinned defaults (`octop user login`)
 ├── repl_history             # readline-style history for `octop chats repl`
 ├── secrets/
@@ -37,7 +37,7 @@ file are left alone). Every running agent inherits those keys:
   injects `OCTOP_AGENT_ID`, `OCTOP_AUTH_DIR` (under `{workspace}/.octop/auth`
   for new agents; legacy agents keep `{workspace}/.octop-auth`),
   and `OCTOP_HOME` into shell/sandbox env.
-- **Docker sandbox** — re-reads `~/.octop/env` on execute, plus workspace `.env`
+- **Docker sandbox** — re-reads `~/.mingdian/env` on execute, plus workspace `.env`
   and a minimal `PATH` (not the full host environment). Admin `PATH`/`HOME`
   cannot override the container toolchain; workspace `.env` may set `PATH`.
 - **Web search tools** (Tavily, Brave, …) register at agent start from process
@@ -74,7 +74,7 @@ on each start. Schema (`OctopConfig` in `octop/config.py`):
   "max_upload_mb": 100,
   "database": {
     "driver": "sqlite",
-    "sqlite_path": "octop.db",
+    "sqlite_path": "mingdian.db",
     "host": "127.0.0.1",
     "port": 5432,
     "database": "octop",
@@ -121,7 +121,7 @@ Notes:
   `client_max_body_size`). Agent workspace file upload, plugin ZIPs,
   and backup archives use separate limits and are not this setting.
 - `plugins.<id>.enabled` is the **global** plugin switch (Dashboard Admin →
-  Plugins). Bundled plugins are copied into `~/.octop/plugins/` on init and
+  Plugins). Bundled plugins are copied into `~/.mingdian/plugins/` on init and
   server start with `enabled: false`. `bundled_plugins_seeded` lists ids
   already offered so uninstall does not come back on the next start.
 
@@ -132,7 +132,7 @@ Each variable, when set, takes precedence over the matching key in
 
 | Variable | Type | Default | Effect |
 |----------|------|---------|--------|
-| `OCTOP_HOME` | path | `~/.octop` | Install root (DB, secrets, workspaces, plugins) |
+| `OCTOP_HOME` | path | `~/.mingdian` | Install root (DB, secrets, workspaces, plugins) |
 | `OCTOP_BIND_HOST` | string | `127.0.0.1` | Listen address (use `0.0.0.0` for LAN access) |
 | `OCTOP_PORT` | int | `8088` | Listen port (`0`–`65535`; `0` asks the OS for a free port) |
 | `OCTOP_LOG_LEVEL` | string | `info` | One of `debug` `info` `warning` `error` |
@@ -156,7 +156,7 @@ Each variable, when set, takes precedence over the matching key in
 | `OCTOP_MAX_UPLOAD_MB` | int | `100` | Max upload size in MiB for chat attachments, IM inbound, and knowledge documents (1–1024) |
 | `OCTOP_DATABASE_URL` | string | empty | Full DSN — overrides the `OCTOP_DATABASE_*` fields below |
 | `OCTOP_DATABASE_DRIVER` | `sqlite` \| `postgresql` | `sqlite` | Storage backend |
-| `OCTOP_DATABASE_SQLITE_PATH` | path | `octop.db` | SQLite file path (relative to `OCTOP_HOME` unless absolute) |
+| `OCTOP_DATABASE_SQLITE_PATH` | path | `mingdian.db` | SQLite file path (relative to `OCTOP_HOME` unless absolute) |
 | `OCTOP_DATABASE_HOST` | string | `127.0.0.1` | PostgreSQL host (when `driver=postgresql`) |
 | `OCTOP_DATABASE_PORT` | int | `5432` | PostgreSQL port |
 | `OCTOP_DATABASE_NAME` | string | `octop` | PostgreSQL database name |
@@ -178,7 +178,7 @@ configured backend at boot.
 **Docker Compose:** put `OCTOP_DATABASE_*` in `docker/.env` *and* ensure
 they are listed under `environment:` in `docker/docker-compose.yml`
 (Compose uses `.env` for interpolation only; unset keys do not enter the
-container). Writing the same keys to the mounted `~/.octop/env` also works.
+container). Writing the same keys to the mounted `~/.mingdian/env` also works.
 
 ### Agent memory vs control plane
 
@@ -232,7 +232,7 @@ runs the same migrations + admin creation without the HTTP wizard.
 ## Secrets
 
 The JWT secret is generated on first start and stored in
-`~/.octop/secrets/jwt_secret`. Rotate it with:
+`~/.mingdian/secrets/jwt_secret`. Rotate it with:
 
 ```bash
 octop admin rotate-jwt-secret

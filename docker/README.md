@@ -26,7 +26,7 @@ From the repository root:
 docker compose -f docker/docker-compose.yml up -d --build
 ```
 
-Open `http://localhost:8088`. If `OCTOP_DEFAULT_PASSWORD` is unset, a strong random password is generated on first init and written to `/data/.octop/credential.txt`; if it is set, it is used as-is (must be ≥8 characters with letters and digits; passwords rejected by the app password policy — e.g. common ones — fall back to a random one automatically). Change the password immediately after first login.
+Open `http://localhost:8088`. If `OCTOP_DEFAULT_PASSWORD` is unset, a strong random password is generated on first init and written to `/data/.mingdian/credential.txt`; if it is set, it is used as-is (must be ≥8 characters with letters and digits; passwords rejected by the app password policy — e.g. common ones — fall back to a random one automatically). Change the password immediately after first login.
 
 **Option 2: Build script**
 
@@ -35,7 +35,7 @@ bash docker/docker_build.sh
 docker run -d \
   --name octop \
   -p 8088:8088 \
-  -v octop-data:/data/.octop \
+  -v octop-data:/data/.mingdian \
   -e HOME=/data \
   octop:latest
 ```
@@ -56,7 +56,7 @@ bash docker/docker_build.sh
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `HOME` | `/data` | Must be `/data` so `~/.octop` maps to the data volume |
+| `HOME` | `/data` | Must be `/data` so `~/.mingdian` maps to the data volume |
 | `OCTOP_PORT` | `8088` | HTTP listen port |
 | `OCTOP_DEFAULT_PASSWORD` | _(unset)_ | First-run admin password (≥8 chars, letters + digits). When unset, a random password is generated and written to `credential.txt` |
 | `OCTOP_ADMIN_USERNAME` | `admin` | Initial admin username |
@@ -65,13 +65,13 @@ bash docker/docker_build.sh
 | `OPENAI_API_KEY` | — | OpenAI-compatible API key |
 | `DASHSCOPE_API_KEY` | — | Alibaba DashScope API key |
 
-For Compose, put these in `docker/.env`. Values only reach the container if listed under `environment:` in `docker-compose.yml` (Compose interpolates `.env`; it does not auto-export every key). Alternatively write the same keys into the mounted data dir as `~/.octop/env`.
+For Compose, put these in `docker/.env`. Values only reach the container if listed under `environment:` in `docker-compose.yml` (Compose interpolates `.env`; it does not auto-export every key). Alternatively write the same keys into the mounted data dir as `~/.mingdian/env`.
 
 ### Data persistence
 
-- Compose mounts host `~/.octop` → container `/data/.octop`
+- Compose mounts host `~/.mingdian` → container `/data/.mingdian`
 - `docker run` example uses named volume `octop-data`
-- First boot runs `octop init`; credentials are written to `/data/.octop/credential.txt`. With `OCTOP_DEFAULT_PASSWORD` unset a random password is generated; a specified password that the app password policy rejects falls back to a random one automatically (the container must never fail its first init because of a weak default).
+- First boot runs `octop init`; credentials are written to `/data/.mingdian/credential.txt`. With `OCTOP_DEFAULT_PASSWORD` unset a random password is generated; a specified password that the app password policy rejects falls back to a random one automatically (the container must never fail its first init because of a weak default).
 
 ### Health check
 

@@ -75,8 +75,8 @@ def green_packages_dir() -> Path | None:
 
 
 def resolve_venv_python() -> str:
-    """Return the Python executable for the managed ~/.octop/venv install."""
-    # Green portable: always the interpreter that launched launch.py, never ~/.octop/venv.
+    """Return the Python executable for the managed ~/.mingdian/venv install."""
+    # Green portable: always the interpreter that launched launch.py, never ~/.mingdian/venv.
     if green_packages_dir() is not None:
         return sys.executable
 

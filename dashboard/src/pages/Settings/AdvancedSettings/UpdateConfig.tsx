@@ -51,7 +51,7 @@ bash docker/docker_build.sh
 docker run -d \\
   --name octop \\
   -p 8088:8088 \\
-  -v octop-data:/data/.octop \\
+  -v octop-data:/data/.mingdian \\
   -e HOME=/data \\
   octop:latest`,
   restart: `# system service (systemd / launchd / Windows service)

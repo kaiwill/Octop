@@ -26,7 +26,7 @@
 docker compose -f docker/docker-compose.yml up -d --build
 ```
 
-访问 `http://localhost:8088`。未设置 `OCTOP_DEFAULT_PASSWORD` 时，首次初始化会自动生成随机密码并写入 `/data/.octop/credential.txt`；设置了则按设置值初始化（须 ≥8 位且同时包含字母和数字；被应用密码策略拒绝的常见弱密码会自动回退为随机密码）。首次登录后请立即修改密码。
+访问 `http://localhost:8088`。未设置 `OCTOP_DEFAULT_PASSWORD` 时，首次初始化会自动生成随机密码并写入 `/data/.mingdian/credential.txt`；设置了则按设置值初始化（须 ≥8 位且同时包含字母和数字；被应用密码策略拒绝的常见弱密码会自动回退为随机密码）。首次登录后请立即修改密码。
 
 **方式二：构建脚本**
 
@@ -35,7 +35,7 @@ bash docker/docker_build.sh
 docker run -d \
   --name octop \
   -p 8088:8088 \
-  -v octop-data:/data/.octop \
+  -v octop-data:/data/.mingdian \
   -e HOME=/data \
   octop:latest
 ```
@@ -56,7 +56,7 @@ bash docker/docker_build.sh
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `HOME` | `/data` | 必须为 `/data`，数据目录映射到 `~/.octop` |
+| `HOME` | `/data` | 必须为 `/data`，数据目录映射到 `~/.mingdian` |
 | `OCTOP_PORT` | `8088` | HTTP 服务端口 |
 | `OCTOP_DEFAULT_PASSWORD` | _(未设置)_ | 首次管理员密码（≥8 位，字母+数字）。未设置时自动生成随机密码并写入 `credential.txt` |
 | `OCTOP_ADMIN_USERNAME` | `admin` | 首次管理员用户名 |
@@ -65,13 +65,13 @@ bash docker/docker_build.sh
 | `OPENAI_API_KEY` | — | OpenAI 兼容 API Key |
 | `DASHSCOPE_API_KEY` | — | 阿里云通义千问 API Key |
 
-Compose 可在 `docker/.env` 中配置上述变量。注意：`.env` 只参与 Compose 插值，变量必须出现在 `docker-compose.yml` 的 `environment:` 中才会进入容器。也可把相同键写入挂载数据目录下的 `~/.octop/env`。
+Compose 可在 `docker/.env` 中配置上述变量。注意：`.env` 只参与 Compose 插值，变量必须出现在 `docker-compose.yml` 的 `environment:` 中才会进入容器。也可把相同键写入挂载数据目录下的 `~/.mingdian/env`。
 
 ### 数据持久化
 
-- Compose 默认将宿主机 `~/.octop` 挂载到容器 `/data/.octop`
+- Compose 默认将宿主机 `~/.mingdian` 挂载到容器 `/data/.mingdian`
 - `docker run` 示例使用命名卷 `octop-data`
-- 首次启动会自动执行 `octop init`，凭据写入容器内 `/data/.octop/credential.txt`。未设置 `OCTOP_DEFAULT_PASSWORD` 时自动生成随机密码；指定的密码被应用密码策略拒绝时自动回退为随机密码（首次初始化绝不因弱默认密码而失败）。
+- 首次启动会自动执行 `octop init`，凭据写入容器内 `/data/.mingdian/credential.txt`。未设置 `OCTOP_DEFAULT_PASSWORD` 时自动生成随机密码；指定的密码被应用密码策略拒绝时自动回退为随机密码（首次初始化绝不因弱默认密码而失败）。
 
 ### 健康检查
 

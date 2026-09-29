@@ -109,7 +109,7 @@ async def reload_plugins(
     server: OctopServer = Depends(get_server),
     _user: Any = Depends(require_permission("plugins")),
 ) -> dict[str, Any]:
-    """Re-read ``~/.octop/plugins`` into the process registry and reload agents.
+    """Re-read ``~/.mingdian/plugins`` into the process registry and reload agents.
 
     Use after a CLI ``octop plugin install`` while ``octop run`` is already up —
     disk install does not update the running server until reload or restart.
@@ -220,7 +220,7 @@ async def install_market_plugin(
     server: OctopServer = Depends(get_server),
     _user: Any = Depends(require_permission("plugins")),
 ) -> dict[str, Any]:
-    """Copy a catalog plugin into ``~/.octop/plugins`` (future: download ZIP)."""
+    """Copy a catalog plugin into ``~/.mingdian/plugins`` (future: download ZIP)."""
     mgr = _plugin_manager(server)
     loop = asyncio.get_running_loop()
     try:
@@ -316,7 +316,7 @@ async def get_plugin_ui_asset(
     server: OctopServer = Depends(get_server),
     _user: Any = Depends(current_user),
 ) -> Response:
-    """Read-only static files from ``~/.octop/plugins/<id>/`` (typically ``ui/dist/``).
+    """Read-only static files from ``~/.mingdian/plugins/<id>/`` (typically ``ui/dist/``).
 
     Authenticated users only. Paths are traversal-checked in ``PluginManager``.
     """

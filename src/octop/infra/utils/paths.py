@@ -46,7 +46,7 @@ class PathLayout:
 
     @property
     def logs_dir(self) -> Path:
-        """Structured runtime logs: ``~/.octop/logs/``."""
+        """Structured runtime logs: ``~/.mingdian/logs/``."""
         return self.root / "logs"
 
     @property
@@ -77,31 +77,31 @@ class PathLayout:
 
     @property
     def agents_dir(self) -> Path:
-        """Global agents directory: ~/.octop/agents/"""
+        """Global agents directory: ~/.mingdian/agents/"""
         return self.root / "agents"
 
     @property
     def expert_market_dir(self) -> Path:
-        """Cached SkillHub expert templates: ``~/.octop/expert_market/``."""
+        """Cached SkillHub expert templates: ``~/.mingdian/expert_market/``."""
         return self.root / "expert_market"
 
     @property
     def published_experts_dir(self) -> Path:
-        """User-published expert snapshots: ``~/.octop/published_experts/``."""
+        """User-published expert snapshots: ``~/.mingdian/published_experts/``."""
         return self.root / "published_experts"
 
     @property
     def skill_packages_dir(self) -> Path:
-        """Global skill package content: ``~/.octop/skill-packages/``."""
+        """Global skill package content: ``~/.mingdian/skill-packages/``."""
         return self.root / "skill-packages"
 
     @property
     def knowledge_dir(self) -> Path:
-        """Global knowledge base files: ``~/.octop/knowledge/``."""
+        """Global knowledge base files: ``~/.mingdian/knowledge/``."""
         return self.root / "knowledge"
 
     def agent_workspace(self, agent_id: str) -> Path:
-        """Global agent workspace: ~/.octop/agents/<agent_id>/"""
+        """Global agent workspace: ~/.mingdian/agents/<agent_id>/"""
         return self.agents_dir / agent_id
 
     def ensure_agent_workspace(self, agent_id: str) -> Path:
@@ -120,7 +120,7 @@ class PathLayout:
 
     @property
     def tool_guard_rules_dir(self) -> Path:
-        """User-editable command guard rules: ``~/.octop/security/tool_guard/``."""
+        """User-editable command guard rules: ``~/.mingdian/security/tool_guard/``."""
         return self.root / "security" / "tool_guard"
 
     @property
@@ -129,7 +129,7 @@ class PathLayout:
 
     @property
     def backups_dir(self) -> Path:
-        """Stored system backup archives: ``~/.octop/backups/``."""
+        """Stored system backup archives: ``~/.mingdian/backups/``."""
         return self.root / "backups"
 
     def ensure_backups_dir(self) -> Path:
@@ -143,17 +143,17 @@ class PathLayout:
 
     @property
     def user_avatars_dir(self) -> Path:
-        """Uploaded user portraits: ``~/.octop/avatars/users/``."""
+        """Uploaded user portraits: ``~/.mingdian/avatars/users/``."""
         return self.root / "avatars" / "users"
 
     @property
     def role_avatars_dir(self) -> Path:
-        """Uploaded role portraits: ``~/.octop/avatars/roles/``."""
+        """Uploaded role portraits: ``~/.mingdian/avatars/roles/``."""
         return self.root / "avatars" / "roles"
 
     @property
     def ssl_dir(self) -> Path:
-        """TLS certificates and ACME account keys: ``~/.octop/ssl/``."""
+        """TLS certificates and ACME account keys: ``~/.mingdian/ssl/``."""
         return self.root / "ssl"
 
     def ensure_ssl_dir(self) -> Path:
@@ -163,7 +163,7 @@ class PathLayout:
 
     @property
     def connector_cli_dir(self) -> Path:
-        """Per-instance CLI config roots: ``~/.octop/connector-cli/``."""
+        """Per-instance CLI config roots: ``~/.mingdian/connector-cli/``."""
         return self.root / "connector-cli"
 
     def connector_cli_instance_dir(self, kind: str, instance_key: str) -> Path:

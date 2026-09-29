@@ -22,7 +22,7 @@ Octop is a self-hosted control plane. Operators are responsible for:
 
 - Securing the host and network exposure of `octop run`
 - Rotating JWT secrets and admin credentials
-- Reviewing tool guard rules under `~/.octop/security/tool_guard/`
+- Reviewing tool guard rules under `~/.mingdian/security/tool_guard/`
 - Protecting LLM API keys and IM channel credentials
 
 See [docs/configuration.md](docs/configuration.md) for deployment hardening guidance.

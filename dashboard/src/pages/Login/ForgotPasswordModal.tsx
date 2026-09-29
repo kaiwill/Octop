@@ -139,7 +139,7 @@ function PlatformHelp({ platform }: { platform: Platform }) {
       <CopyCommand
         text={t(
           "login.forgotPasswordUnixPath",
-          "~/.octop/bin/octop user passwd <username> --password <new-password>",
+          "~/.mingdian/bin/octop user passwd <username> --password <new-password>",
         )}
       />
     </div>

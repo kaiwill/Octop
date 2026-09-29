@@ -118,7 +118,7 @@ git clone https://github.com/TencentCloud/Octop.git
 cd Octop
 
 # 2. 创建数据目录
-mkdir -p ~/.octop
+mkdir -p ~/.mingdian
 
 # 3. 配置环境变量
 cp .env.example .env
@@ -153,7 +153,7 @@ docker compose up -d
 docker compose logs -f
 
 # 6. 获取初始凭据 (如果未设置 OCTOP_ADMIN_PASSWORD)
-docker compose exec octop cat /data/.octop/credential.txt
+docker compose exec octop cat /data/.mingdian/credential.txt
 ```
 
 ### 3.2 Docker Compose 配置
@@ -171,7 +171,7 @@ services:
     ports:
       - "${OCTOP_PORT:-8088}:${OCTOP_PORT:-8088}"
     volumes:
-      - ${OCTOP_DATA:-~/.octop}:/data/.octop
+      - ${OCTOP_DATA:-~/.mingdian}:/data/.mingdian
     environment:
       - OCTOP_BIND_HOST=0.0.0.0
       - OCTOP_PORT=${OCTOP_PORT:-8088}
@@ -202,7 +202,7 @@ services:
     ports:
       - "8088:8088"
     volumes:
-      - octop_data:/data/.octop
+      - octop_data:/data/.mingdian
     environment:
       - OCTOP_BIND_HOST=0.0.0.0
       - OCTOP_PORT=8088
@@ -292,15 +292,15 @@ docker compose up -d --build
 
 | 路径 | 说明 |
 |------|------|
-| `/data/.octop/config.json` | 主配置文件 |
-| `/data/.octop/env` | 环境变量文件 |
-| `/data/.octop/octop.db` | SQLite 数据库 (如使用 SQLite) |
-| `/data/.octop/secrets/` | 加密密钥 |
-| `/data/.octop/agents/` | Agent 工作空间 |
-| `/data/.octop/plugins/` | 插件 |
-| `/data/.octop/skill_packages/` | 技能包 |
-| `/data/.octop/logs/` | 日志文件 |
-| `/data/.octop/ssl/` | TLS 证书 |
+| `/data/.mingdian/config.json` | 主配置文件 |
+| `/data/.mingdian/env` | 环境变量文件 |
+| `/data/.mingdian/mingdian.db` | SQLite 数据库 (如使用 SQLite) |
+| `/data/.mingdian/secrets/` | 加密密钥 |
+| `/data/.mingdian/agents/` | Agent 工作空间 |
+| `/data/.mingdian/plugins/` | 插件 |
+| `/data/.mingdian/skill_packages/` | 技能包 |
+| `/data/.mingdian/logs/` | 日志文件 |
+| `/data/.mingdian/ssl/` | TLS 证书 |
 
 **备份关键数据：**
 
@@ -416,7 +416,7 @@ cat > /var/lib/octop/config.json << 'EOF'
   "enable_api_docs": false,
   "database": {
     "driver": "sqlite",
-    "sqlite_path": "octop.db"
+    "sqlite_path": "mingdian.db"
   }
 }
 EOF
@@ -582,10 +582,10 @@ sudo -u postgres pg_restore -d octop -c /backup/octop-db-YYYYMMDD.dump
 |------|------|------|
 | 主配置 | `$OCTOP_HOME/config.json` | 核心配置 |
 | 环境变量 | `$OCTOP_HOME/env` | 敏感信息 (API Key 等) |
-| 数据库 | `$OCTOP_HOME/octop.db` | SQLite 数据库 |
+| 数据库 | `$OCTOP_HOME/mingdian.db` | SQLite 数据库 |
 | 日志 | `$OCTOP_HOME/logs/` | 日志文件 |
 
-默认 `OCTOP_HOME=~/.octop`。
+默认 `OCTOP_HOME=~/.mingdian`。
 
 ### 6.2 config.json 完整参考
 
@@ -623,7 +623,7 @@ sudo -u postgres pg_restore -d octop -c /backup/octop-db-YYYYMMDD.dump
   // 数据库
   "database": {
     "driver": "sqlite",                 // sqlite | postgresql
-    "sqlite_path": "octop.db",          // SQLite 文件路径
+    "sqlite_path": "mingdian.db",          // SQLite 文件路径
     "host": "127.0.0.1",                // PostgreSQL 主机
     "port": 5432,                       // PostgreSQL 端口
     "database": "octop",                // PostgreSQL 数据库名
@@ -661,7 +661,7 @@ sudo -u postgres pg_restore -d octop -c /backup/octop-db-YYYYMMDD.dump
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `OCTOP_HOME` | `~/.octop` | 数据根目录 |
+| `OCTOP_HOME` | `~/.mingdian` | 数据根目录 |
 | `OCTOP_BIND_HOST` | `127.0.0.1` | 监听地址 |
 | `OCTOP_PORT` | `8088` | 监听端口 |
 | `OCTOP_LOG_LEVEL` | `info` | 日志级别 |
@@ -680,7 +680,7 @@ sudo -u postgres pg_restore -d octop -c /backup/octop-db-YYYYMMDD.dump
 | `OCTOP_BROWSER_IDLE_TIMEOUT_MINUTES` | `30` | 浏览器空闲超时 |
 | `OCTOP_DATABASE_URL` | - | 数据库完整 URL |
 | `OCTOP_DATABASE_DRIVER` | `sqlite` | 数据库驱动 |
-| `OCTOP_DATABASE_SQLITE_PATH` | `octop.db` | SQLite 路径 |
+| `OCTOP_DATABASE_SQLITE_PATH` | `mingdian.db` | SQLite 路径 |
 | `OCTOP_DATABASE_HOST` | `127.0.0.1` | PostgreSQL 主机 |
 | `OCTOP_DATABASE_PORT` | `5432` | PostgreSQL 端口 |
 | `OCTOP_DATABASE_NAME` | `octop` | PostgreSQL 数据库名 |
@@ -1079,9 +1079,9 @@ mkdir -p "$BACKUP_DIR"
 echo "[$(date)] Starting backup..."
 
 # 备份数据库
-if [ -f "$DATA_DIR/octop.db" ]; then
+if [ -f "$DATA_DIR/mingdian.db" ]; then
     # SQLite: 直接复制 (WAL 模式下安全)
-    sqlite3 "$DATA_DIR/octop.db" "VACUUM INTO '$BACKUP_DIR/octop-db-$DATE.db'"
+    sqlite3 "$DATA_DIR/mingdian.db" "VACUUM INTO '$BACKUP_DIR/octop-db-$DATE.db'"
     gzip "$BACKUP_DIR/octop-db-$DATE.db"
     echo "  Database backed up"
 else
@@ -1133,7 +1133,7 @@ sudo chmod +x /usr/local/bin/octop-backup.sh
 sudo systemctl stop octop
 
 # 2. 恢复数据库 (SQLite)
-cp /backup/octop-db-20260928.db /var/lib/octop/octop.db
+cp /backup/octop-db-20260928.db /var/lib/octop/mingdian.db
 
 # 或恢复 PostgreSQL
 sudo -u postgres pg_restore -d octop -c /backup/octop-db-20260928.dump
@@ -1362,7 +1362,7 @@ password_encryption = scram-sha-256
 
 ```bash
 # 确保数据库文件权限
-chmod 600 /var/lib/octop/octop.db
+chmod 600 /var/lib/octop/mingdian.db
 ```
 
 ### 12.5 API 安全
@@ -1629,7 +1629,7 @@ ls -la /var/lib/octop/
 cat /var/lib/octop/config.json | python3 -m json.tool
 
 # 4. 数据库锁定
-lsof /var/lib/octop/octop.db
+lsof /var/lib/octop/mingdian.db
 ```
 
 ### 15.2 Agent 无法启动
@@ -1678,8 +1678,8 @@ proxy_read_timeout 86400s;
 
 ```bash
 # SQLite
-ls -la /var/lib/octop/octop.db
-sqlite3 /var/lib/octop/octop.db "PRAGMA integrity_check;"
+ls -la /var/lib/octop/mingdian.db
+sqlite3 /var/lib/octop/mingdian.db "PRAGMA integrity_check;"
 
 # PostgreSQL
 psql -h 127.0.0.1 -U octop -d octop -c "SELECT 1;"
@@ -1788,7 +1788,7 @@ docker volume prune -f
 |------|------|
 | 配置 | `/var/lib/octop/config.json` |
 | 环境变量 | `/var/lib/octop/env` |
-| 数据库 | `/var/lib/octop/octop.db` |
+| 数据库 | `/var/lib/octop/mingdian.db` |
 | 日志 | `/var/lib/octop/logs/octop.log` |
 | Agent 数据 | `/var/lib/octop/agents/` |
 | 插件 | `/var/lib/octop/plugins/` |

@@ -79,11 +79,11 @@ class BackupManifest:
             includes_config=bool(data.get("includes_config", True)),
             includes_env=bool(data.get("includes_env", False)),
             includes_skill_packages=bool(data.get("includes_skill_packages", True)),
-            # Older archives never packed ~/.octop/plugins; missing key means omit on restore.
+            # Older archives never packed ~/.mingdian/plugins; missing key means omit on restore.
             includes_plugins=(
                 bool(data["includes_plugins"]) if "includes_plugins" in data else False
             ),
-            # Older archives never packed ~/.octop/knowledge.
+            # Older archives never packed ~/.mingdian/knowledge.
             includes_knowledge=(
                 bool(data["includes_knowledge"]) if "includes_knowledge" in data else False
             ),

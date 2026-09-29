@@ -41,7 +41,7 @@ metadata:
 | **Agent ID** | 后续 `octop --agent <id>` 的必填参数 |
 | **归属用户** | Agent 所有者（共享 Agent 会标注「无单一归属」） |
 | **对话用户** | **本次对话** 的 Octop 用户（username + id）— 比 CLI `config show` 可靠 |
-| **工作区** | `~/.octop/agents/<id>/` 路径 |
+| **工作区** | `~/.mingdian/agents/<id>/` 路径 |
 | **专家模板** | 若从专家库创建，显示 template 名 |
 | **模型 / 渠道 / 定时任务** | 当前会话与运行态摘要 |
 
@@ -59,7 +59,7 @@ Agent 自身无法代替用户触发斜杠指令时，明确提示用户发送 `
 |------|------------------|-------------------------------------|
 | **Web Dashboard** | 浏览器 JWT；服务端在消息里带 `user_id`（`channel_subject.subject_id`） | **不能** |
 | **IM Channel** | 通道映射的 Octop 用户 id（同上） | **不能** |
-| **服务器终端 CLI** | `octop user login` 写入 `~/.octop/cli_state.json` | **能**（仅反映该文件里的账号） |
+| **服务器终端 CLI** | `octop user login` 写入 `~/.mingdian/cli_state.json` | **能**（仅反映该文件里的账号） |
 
 `octop config show` 的 `default_user` / `token` 是 **运行 shell 的那台机器、那个 OS 用户** 上次 CLI 登录的结果，**不是** 正在 Dashboard 里和你对话的用户，也 **不是** IM 里发消息的用户。
 
@@ -73,7 +73,7 @@ Agent 自身无法代替用户触发斜杠指令时，明确提示用户发送 `
 
 | 信息 | 如何获得 |
 |------|----------|
-| **Agent ID** | 让用户发 `/status`，或从工作区路径 `~/.octop/agents/<id>/` 推断 |
+| **Agent ID** | 让用户发 `/status`，或从工作区路径 `~/.mingdian/agents/<id>/` 推断 |
 | **对话用户** | `/status` 的 **对话用户** 行（权威来源） |
 | **归属用户** | `/status` 的 **归属用户** 行 |
 | **工作区路径** | `/status` 的 **工作区** 行 |
@@ -89,11 +89,11 @@ Agent 自身无法代替用户触发斜杠指令时，明确提示用户发送 `
 
 你正在为用户服务的 Agent，其 ID 通常可从工作区路径推断：
 
-- 工作区目录：`~/.octop/agents/<AGENT_ID>/`
+- 工作区目录：`~/.mingdian/agents/<AGENT_ID>/`
 - 若 shell 当前目录在工作区内，可执行：
 
 ```bash
-# 从当前工作区路径解析 agent id（在 ~/.octop/agents/<id>/ 下时有效）
+# 从当前工作区路径解析 agent id（在 ~/.mingdian/agents/<id>/ 下时有效）
 AGENT_ID="$(basename "$(cd .. 2>/dev/null && pwd)")"
 echo "agent=$AGENT_ID"
 ```
@@ -104,7 +104,7 @@ echo "agent=$AGENT_ID"
 octop agent list
 # 记下 id 列，例如 main
 export OCTOP_AGENT=main
-octop agent use main   # 写入 ~/.octop/cli_state.json，后续可省略 --agent
+octop agent use main   # 写入 ~/.mingdian/cli_state.json，后续可省略 --agent
 ```
 
 **规则**：下文凡标注「需 `--agent`」的命令，统一使用以下任一写法（不要裸跑）：
@@ -176,7 +176,7 @@ Octop 的 Provider 为**全局（管理员）**配置；Agent 可选用全局默
 
 ### 查看 Provider 与模型（直接执行）
 
-**禁止**直接查 `~/.octop/octop.db`。`json_each(providers.models_json).id` 是 SQLite 内部序号，不是模型名，会拼出非法的 `"model": 1`。
+**禁止**直接查 `~/.mingdian/mingdian.db`。`json_each(providers.models_json).id` 是 SQLite 内部序号，不是模型名，会拼出非法的 `"model": 1`。
 
 用 CLI（`models[].id` / 输出里的模型 id 才是发给网关的字符串）：
 
@@ -445,7 +445,7 @@ octop update -y
 
 升级后需 **重启** `octop run`（或 Docker 容器）才生效。先用 `octop service status` 确认服务状态，再告知用户重启方式。
 
-### 插件（直接执行，读写本地 ~/.octop/plugins）
+### 插件（直接执行，读写本地 ~/.mingdian/plugins）
 
 ```bash
 octop plugin list
@@ -463,11 +463,11 @@ octop plugin uninstall <plugin_id>
 
 | 层 | 位置 | 谁继承 |
 |---|---|---|
-| 全局 | `~/.octop/env` | 所有 Agent（shell / Docker 沙箱 / ACP） |
+| 全局 | `~/.mingdian/env` | 所有 Agent（shell / Docker 沙箱 / ACP） |
 | Agent | 工作区 `.env` | 仅该 Agent（同名覆盖全局；不可覆盖 `OCTOP_*` / `HOME` / `USER`） |
 
 - 查看 / 编辑全局：Web 控制台 → **Admin → 应用设置 → 环境变量**
-- 或直接编辑 `~/.octop/env`（控制台保存会立刻对齐进程环境；搜索类 key 变化会后台 reload Agent。手改文件后需保存一次或 `octop agent reload`）
+- 或直接编辑 `~/.mingdian/env`（控制台保存会立刻对齐进程环境；搜索类 key 变化会后台 reload Agent。手改文件后需保存一次或 `octop agent reload`）
 - Agent 专用变量写入工作区 `.env`（也可用 `write_env_file`）；下一句 shell / Docker exec 即生效，不必 reload
 - 搜索 API Key（如 `TAVILY_API_KEY`）请放全局，不要只写在某个 Agent 的 `.env`
 
@@ -523,7 +523,7 @@ octop plugin uninstall <plugin_id>
 |------|----------|
 | 首次向导、Provider、用户 | Web 控制台或 `octop init` / `models config` |
 | 脚本化、批量、排障 | CLI（本 skill） |
-| 环境变量 | 控制台 Environments 或编辑 `~/.octop/env` |
+| 环境变量 | 控制台 Environments 或编辑 `~/.mingdian/env` |
 | 对话与文件 | Web / IM 通道，非 CLI |
 
-数据目录：`~/.octop/`（`octop.db`、`config.json`、`agents/`、`env`、`cli_state.json`）。
+数据目录：`~/.mingdian/`（`mingdian.db`、`config.json`、`agents/`、`env`、`cli_state.json`）。

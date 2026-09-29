@@ -37,7 +37,7 @@ const SKILL_DIR = path.dirname(SCRIPTS_DIR);
 const CLIENT_ID = 'c6f50b5a1e2f4e2bb00a3e2f58df3ced';
 const PT_PASSPORT_BIN = path.join(SCRIPTS_DIR, 'node_modules', '.bin', 'pt-passport');
 // 认证目录：Octop 多用户/多 Agent 隔离时通过 OCTOP_AUTH_DIR 环境变量注入
-// （如 ~/.octop/agents/<id>/credentials/meituan/）；未注入时回退到本机默认目录。
+// （如 ~/.mingdian/agents/<id>/credentials/meituan/）；未注入时回退到本机默认目录。
 const AUTH_DIR = process.env.OCTOP_AUTH_DIR
     || path.join(require('os').homedir(), '.workbuddy', 'credentials', 'meituan-living-deals-assistant');
 
@@ -75,7 +75,7 @@ function isPython3(pythonPath) {
 /**
  * Python 解释器解析优先级：
  * 1. OCTOP_PYTHON 环境变量（显式指定）
- * 2. Octop 自托管 venv（裸机安装：$OCTOP_HOME/venv/bin/python，默认 ~/.octop/venv）
+ * 2. Octop 自托管 venv（裸机安装：$OCTOP_HOME/venv/bin/python，默认 ~/.mingdian/venv）
  * 3. Octop Docker 镜像 venv（/app/.venv/bin/python）
  * 4. 回退：PATH 上的 python3 / python（非 Octop 宿主环境的兼容路径）
  */

@@ -1,7 +1,7 @@
 """OpenAI Codex (ChatGPT) OAuth — device code flow.
 
 Ported from finnie/lightclaw; constants match openclaw wire contract.
-Tokens live at ``~/.octop/codex_oauth.json``.
+Tokens live at ``~/.mingdian/codex_oauth.json``.
 
 Octop is a server (not a local CLI), so it cannot use the PKCE browser
 redirect flow: that flow's shared client only accepts the exact

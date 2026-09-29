@@ -30,7 +30,7 @@ import click
     "--force",
     is_flag=True,
     default=False,
-    help="Wipe existing ~/.octop contents before bootstrapping.",
+    help="Wipe existing ~/.mingdian contents before bootstrapping.",
 )
 @click.option(
     "--yes",
