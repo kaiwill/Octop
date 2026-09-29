@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Octop",
-  "short_name": "Octop",
+  "name": "华同明典",
+  "short_name": "明典",
   "description": "Smarter self-hosted AI assistant — multi-user, multi-agent",
   "start_url": "/",
   "scope": "/",

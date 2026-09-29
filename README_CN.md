@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/readme-banner-zh.png" alt="Octop Banner" width="600" />
+  <img src="docs/assets/readme-banner-zh.png" alt="华同明典 Banner" width="600" />
 </p>
 
 <p align="center">
@@ -38,7 +38,7 @@
 
 ---
 
-**Octop** 是一个开源、自托管的 AI 助手。它不仅是工具，更是可并行运作的数字生命体。通过多 Agent 架构，它为团队、家庭和个人构建了既独立又协作的智能环境。并且这一切都运行在你的机器上——完全自托管的设计让隐私不再是妥协，而单进程启动的便捷性，则让强大的 Web 控制台、CLI 与 IM 集成触手可及。
+**华同明典**是华同律师事务所基于开源项目 Octop 二次开发的智能办案助手。它不仅是工具，更是可并行运作的数字生命体。通过多 Agent 架构，它为律师团队构建了既独立又协作的智能环境。并且这一切都运行在你的机器上——完全自托管的设计让隐私不再是妥协，而单进程启动的便捷性，则让强大的 Web 控制台、CLI 与 IM 集成触手可及。
 
 借助飞书、钉钉、QQ、微信、企业微信或 HTTP/SSE/WebSocket API 与任意 Agent 对话；通过**专家库**一键创建专业角色，通过 **Connector**（OAuth + MCP）接入外部服务，通过 **ACP** 与 IDE / 终端 AI 工具双向协作。
 
@@ -65,9 +65,9 @@
 
 ## 📌 概述
 
-Octop 是面向家庭与小团队的自托管 AI 助手平台。单进程同时提供 Web 控制台、CLI、IM 通道（飞书、钉钉、QQ、微信、企业微信等）与定时任务，共享 `~/.octop/` 下的控制面数据库（默认 SQLite；可选 PostgreSQL）。
+华同明典是面向律师团队的智能办案平台。单进程同时提供 Web 控制台、CLI、IM 通道（飞书、钉钉、QQ、微信、企业微信等）与定时任务，共享 `~/.mingdian/` 下的控制面数据库（默认 SQLite；可选 PostgreSQL）。
 
-> Octop 的设计目标：让每一次对话、工作区与凭据都留在你自己的机器上，同时为每个用户配备一组可按场景切换的专业 Agent。
+> 华同明典的设计目标：让每一次对话、工作区与凭据都留在你自己的机器上，同时为每个用户配备一组可按场景切换的专业 Agent。
 
 <details>
 <summary>🐾 你能用 Octop 做什么</summary>

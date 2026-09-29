@@ -1,33 +1,36 @@
 #!/usr/bin/env bash
 # =============================================================================
-# Octop 容器入口脚本
+# 华同明典 容器入口脚本
 #
 # 环境变量:
-#   HOME                      — 必须为 /data，使 ~/.octop 映射到数据卷
+#   HOME                      — 必须为 /data，使 ~/.mingdian 映射到数据卷
 #   OCTOP_DEFAULT_PASSWORD    — 首次管理员密码（须 ≥8 位且含字母和数字；
 #                               不设置则自动生成随机密码，凭据写入
-#                               /data/.octop/credential.txt）
+#                               /data/.mingdian/credential.txt）
 #   OCTOP_ADMIN_USERNAME      — 首次管理员用户名（默认: admin）
 #   OCTOP_ADMIN_DISPLAY_NAME  — 可选显示名
 #   OCTOP_PORT                — 服务端口（默认: 8088）
 #
-# 密码兜底（修复 issue #502）：应用侧密码策略带常见弱密码黑名单（含
-# Octop123），旧版默认密码会让 octop init 报 "password is too common"
-# 退出、容器反复重启。现在：未设置密码时自动生成随机强密码；指定的
-# 密码被策略拒绝时也自动改用随机密码重试，保证容器一定能完成首次初始化。
+# 密码兜底（修复 issue #502）：应用侧密码策略带常见弱密码黑名单，旧版默认
+# 密码会让初始化报 "password is too common" 退出、容器反复重启。现在：未设置
+# 密码时自动生成随机强密码；指定的密码被策略拒绝时也自动改用随机密码重试，
+# 保证容器一定能完成首次初始化。
 # =============================================================================
 set -euo pipefail
 
 export HOME="${HOME:-/data}"
-OCTOP_HOME="${HOME}/.octop"
-DB_FILE="${OCTOP_HOME}/octop.db"
-CREDENTIAL_FILE="${OCTOP_HOME}/credential.txt"
+MINGDIAN_HOME="${MINGDIAN_HOME:-${OCTOP_HOME:-${HOME}/.mingdian}}"
+DB_FILE="${MINGDIAN_HOME}/mingdian.db"
+if [ ! -f "$DB_FILE" ]; then
+    DB_FILE="${MINGDIAN_HOME}/octop.db"
+fi
+CREDENTIAL_FILE="${MINGDIAN_HOME}/credential.txt"
 ADMIN_USERNAME="${OCTOP_ADMIN_USERNAME:-admin}"
 ADMIN_DISPLAY_NAME="${OCTOP_ADMIN_DISPLAY_NAME:-Admin}"
 PORT="${OCTOP_PORT:-8088}"
 
 # 生成随机密码（首字符字母、末字符数字，避开易混淆字符）。
-octop_random_password() {
+mingdian_random_password() {
     local letters='abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
     local digits='23456789'
     local all="${letters}${digits}" n=16 out="" i b
@@ -45,21 +48,21 @@ octop_random_password() {
 DEFAULT_PASSWORD="${OCTOP_DEFAULT_PASSWORD:-}"
 
 if [ ! -f "$DB_FILE" ]; then
-    echo "[entrypoint] 首次启动，正在初始化 Octop..."
+    echo "[entrypoint] 首次启动，正在初始化华同明典..."
 
     if [ -z "$DEFAULT_PASSWORD" ]; then
-        DEFAULT_PASSWORD="$(octop_random_password)"
+        DEFAULT_PASSWORD="$(mingdian_random_password)"
         echo "[entrypoint] 未设置 OCTOP_DEFAULT_PASSWORD，已自动生成随机密码。"
     fi
 
-    if ! octop init \
+    if ! mingdian init \
         --yes \
         --admin-username "$ADMIN_USERNAME" \
         --admin-password "$DEFAULT_PASSWORD" \
         ${ADMIN_DISPLAY_NAME:+--admin-display-name "$ADMIN_DISPLAY_NAME"}; then
         echo "[entrypoint] 指定的初始密码未通过应用密码策略（过弱或过于常见），改用随机密码重试 ..."
-        DEFAULT_PASSWORD="$(octop_random_password)"
-        octop init \
+        DEFAULT_PASSWORD="$(mingdian_random_password)"
+        mingdian init \
             --yes \
             --admin-username "$ADMIN_USERNAME" \
             --admin-password "$DEFAULT_PASSWORD" \
@@ -67,7 +70,7 @@ if [ ! -f "$DB_FILE" ]; then
     fi
 
     cat > "$CREDENTIAL_FILE" << EOF
-Octop Login Credential
+华同明典 Login Credential
 ======================
 URL:      http://<host>:${PORT}
 Username: ${ADMIN_USERNAME}
@@ -75,7 +78,7 @@ Password: ${DEFAULT_PASSWORD}
 
 Please change this password after first login!
   - Via Web: avatar menu → Change password
-  - Via CLI: docker exec -it <container> octop user passwd --username $ADMIN_USERNAME
+  - Via CLI: docker exec -it <container> mingdian user passwd --username $ADMIN_USERNAME
 
 This file is rewritten whenever the initial password is (re)generated here.
 If you changed the password inside the Web console, that password wins.
@@ -85,11 +88,11 @@ EOF
 fi
 
 if [ $# -eq 0 ]; then
-    echo "[entrypoint] 正在启动 Octop，端口 $PORT..."
-    exec octop run --host 0.0.0.0 --port "$PORT"
+    echo "[entrypoint] 正在启动华同明典，端口 $PORT..."
+    exec mingdian run --host 0.0.0.0 --port "$PORT"
 fi
 
-if [ "$1" = "octop" ]; then
+if [ "$1" = "mingdian" ] || [ "$1" = "octop" ]; then
     echo "[entrypoint] 执行命令: $*"
     exec "$@"
 fi

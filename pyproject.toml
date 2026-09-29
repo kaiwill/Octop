@@ -93,6 +93,7 @@ dev = [
 ]
 
 [project.scripts]
+mingdian = "octop.cli.main:cli"
 octop = "octop.cli.main:cli"
 
 [tool.hatch.build.targets.wheel]

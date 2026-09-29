@@ -5,11 +5,11 @@
 version: "3"
 
 info:
-  companyName: "Octop"
-  productName: "Octop"
-  productIdentifier: "com.tencent.octop"
-  description: "Octop desktop shell"
-  copyright: "(c) 2026, Octop"
+  companyName: "华同律师事务所"
+  productName: "华同明典"
+  productIdentifier: "com.huatong.mingdian"
+  description: "华同明典桌面端"
+  copyright: "(c) 2026, 华同律师事务所"
   comments: "Wails v3 + green portable"
   version: "0.9.26"
 

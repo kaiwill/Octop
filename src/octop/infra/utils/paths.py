@@ -1,10 +1,17 @@
-"""Filesystem layout for ``~/.octop/``."""
+"""Filesystem layout for the application home directory."""
 
 from __future__ import annotations
 
 import os
 from dataclasses import dataclass
 from pathlib import Path
+
+from octop.brand import (
+    ENV_HOME,
+    HOME_DIR_NAME,
+    LEGACY_ENV_HOME,
+    LEGACY_HOME_DIR_NAME,
+)
 
 
 @dataclass(frozen=True)
@@ -13,11 +20,24 @@ class PathLayout:
 
     @classmethod
     def from_env(cls) -> PathLayout:
-        """Resolve install root from ``OCTOP_HOME`` or ``~/.octop``."""
-        raw = os.environ.get("OCTOP_HOME", "").strip()
-        if raw:
-            return cls(Path(raw).expanduser())
-        return cls(Path.home() / ".octop")
+        """Resolve install root.
+
+        Priority: ``MINGDIAN_HOME`` > ``OCTOP_HOME`` > ``~/.mingdian`` > ``~/.octop``.
+        Falls back to ``~/.mingdian`` for fresh installs.
+        """
+        primary = os.environ.get(ENV_HOME, "").strip()
+        if primary:
+            return cls(Path(primary).expanduser())
+        legacy = os.environ.get(LEGACY_ENV_HOME, "").strip()
+        if legacy:
+            return cls(Path(legacy).expanduser())
+        new_path = Path.home() / HOME_DIR_NAME
+        if new_path.is_dir():
+            return cls(new_path)
+        legacy_path = Path.home() / LEGACY_HOME_DIR_NAME
+        if legacy_path.is_dir():
+            return cls(legacy_path)
+        return cls(new_path)
 
     @property
     def db(self) -> Path:

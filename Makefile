@@ -1,4 +1,4 @@
-# Makefile for Octop
+# Makefile for 华同明典
 # Usage:
 #   make              - Show this help
 #   make all          - format (BE+FE) + backend lint + typecheck + test (ship bar)
@@ -35,7 +35,7 @@ PYTEST_JOBS ?= auto
 
 .PHONY: help
 help:
-	@echo "Octop Build System"
+	@echo "华同明典 Build System"
 	@echo ""
 	@echo "Usage: make <target>"
 	@echo ""
@@ -51,12 +51,12 @@ help:
 	@echo "Development targets:"
 	@echo "  dev              Start frontend + backend dev servers"
 	@echo "  dev-frontend     Start Vite dev server only"
-	@echo "  dev-backend      Start octop run only"
+	@echo "  dev-backend      Start mingdian run only"
 	@echo ""
-	@echo "Online-deps targets (local Octop source + PyPI harness components):"
-	@echo "  install-online   Create .venv-online: Octop editable + harness-* from PyPI"
+	@echo "Online-deps targets (local 华同明典 source + PyPI harness components):"
+	@echo "  install-online   Create .venv-online: 华同明典 editable + harness-* from PyPI"
 	@echo "  test-online      pytest against .venv-online (not live)"
-	@echo "  run-online       Start octop run from .venv-online"
+	@echo "  run-online       Start mingdian run from .venv-online"
 	@echo ""
 	@echo "Quality targets (ship bar):"
 	@echo "  all              format-all + lint + typecheck + test (backend lint/typecheck/test)"
@@ -160,7 +160,7 @@ dev:
 	@echo "[dev] Starting frontend and backend dev servers (Ctrl-C to stop both)..."
 	@trap 'kill 0' SIGINT; \
 	(cd $(DASHBOARD_DIR) && npm run dev) & \
-	($(RUN) octop run) & \
+	($(RUN) mingdian run) & \
 	wait
 
 .PHONY: dev-frontend
@@ -169,9 +169,9 @@ dev-frontend:
 
 .PHONY: dev-backend
 dev-backend:
-	$(RUN) octop run
+	$(RUN) mingdian run
 
-# ─── Online-deps dev (local Octop source + PyPI harness components) ───────────
+# ─── Online-deps dev (local 华同明典 source + PyPI harness components) ───────────
 # Keeps a dedicated .venv-online alongside .venv. Octop itself is installed
 # editable (-e) so source edits are live; the harness-* siblings are pulled
 # from PyPI (--no-sources ignores the editable local paths in uv.lock).
@@ -193,7 +193,7 @@ test-online:
 
 .PHONY: run-online
 run-online:
-	$(PY_ONLINE)/octop run
+	$(PY_ONLINE)/mingdian run
 
 # ─── Quality (backend) ───────────────────────────────────────────────────────
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib
+import os
 import sys
 from typing import Any, ClassVar
 
@@ -50,7 +51,9 @@ def _get_version() -> str:
 def _print_version(ctx: click.Context, _param: click.Parameter, value: bool) -> None:
     if not value or ctx.resilient_parsing:
         return
-    click.echo(f"octop v{_get_version()}")
+    from octop.brand import DISPLAY_NAME
+
+    click.echo(f"{DISPLAY_NAME} v{_get_version()}")
     ctx.exit()
 
 
@@ -88,7 +91,7 @@ class _LazyCLI(click.Group):
     is_eager=True,
     expose_value=False,
     callback=_print_version,
-    help="Show the installed octop version.",
+    help="Show the installed version.",
 )
 @click.option(
     "--user",
@@ -118,12 +121,25 @@ def cli(
     agent_id: str | None,
     json_out: bool,
 ) -> None:
-    """Octop command-line interface."""
+    """华同明典 command-line interface."""
+    _warn_legacy_invocation()
     _ensure_utf8_stdio()
     ctx.ensure_object(dict)
     ctx.obj["as_user"] = as_user
     ctx.obj["agent_id"] = agent_id
     ctx.obj["json_out"] = json_out
+
+
+def _warn_legacy_invocation() -> None:
+    """Print a deprecation notice when invoked via the legacy ``octop`` command."""
+    argv0 = os.path.basename(sys.argv[0]) if sys.argv else ""
+    if argv0.startswith("octop"):
+        from octop.brand import CLI_NAME, LEGACY_CLI_NAME
+
+        click.echo(
+            f"警告: '{LEGACY_CLI_NAME}' 命令已废弃，请使用 '{CLI_NAME}'",
+            err=True,
+        )
 
 
 if __name__ == "__main__":

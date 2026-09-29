@@ -1,9 +1,9 @@
 Unicode true
 
-# Octop desktop NSIS installer.
-# Built by `wails3 task package` on a Windows runner:
-#   makensis -DARG_WAILS_AMD64_BINARY=..\..\..\bin\Octop.exe project.nsi
-#   makensis -DARG_WAILS_ARM64_BINARY=..\..\..\bin\Octop.exe project.nsi
+# 华同明典桌面端 NSIS 安装程序。
+# 由 `wails3 task package` 在 Windows 构建机上生成：
+#   makensis -DARG_WAILS_AMD64_BINARY=..\..\..\bin\Mingdian.exe project.nsi
+#   makensis -DARG_WAILS_ARM64_BINARY=..\..\..\bin\Mingdian.exe project.nsi
 
 # Written by stamp_version.py nsis-defines (pep440 display + X.X.X.X file version).
 !include /nonfatal "version_defines.nsh"

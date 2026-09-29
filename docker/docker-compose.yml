@@ -1,5 +1,5 @@
 # =============================================================================
-# Octop — Docker Compose
+# 华同明典 — Docker Compose
 #
 # 用法（在仓库根目录执行）:
 #   docker compose -f docker/docker-compose.yml up -d
@@ -14,23 +14,23 @@
 #   OCTOP_DATABASE_URL=postgresql://octop:octop@host.docker.internal:5432/octop
 #
 # 注意: docker/.env 仅用于 Compose 插值；变量必须列在下方 environment
-# 才会进入容器。也可写入数据卷内的 ~/.octop/env（宿主机挂载目录下的 env）。
+# 才会进入容器。也可写入数据卷内的 ~/.mingdian/env（宿主机挂载目录下的 env）。
 # 密码须 ≥8 位且同时包含字母与数字（与控制台改密策略一致）。
 # 后续计划：首次启动可改为随机生成密码并写入 credential.txt。
 # =============================================================================
 
 services:
-  octop:
+  mingdian:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: octop:latest
-    container_name: octop
+    image: mingdian:latest
+    container_name: mingdian
     restart: unless-stopped
     ports:
       - "${OCTOP_PORT:-8088}:${OCTOP_PORT:-8088}"
     volumes:
-      - ${OCTOP_DATA:-~/.octop}:/data/.octop
+      - ${OCTOP_DATA:-~/.mingdian}:/data/.mingdian
     environment:
       - HOME=/data
       - OCTOP_BIND_HOST=0.0.0.0

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # =============================================================================
-# 构建 Octop Docker 镜像
+# 构建华同明典 Docker 镜像
 #
 # 用法:
 #   bash docker/docker_build.sh [镜像标签] [额外 docker build 参数...]
 #
 # 示例:
 #   bash docker/docker_build.sh
-#   bash docker/docker_build.sh myreg/octop:v1
+#   bash docker/docker_build.sh myreg/mingdian:v1
 #   bash docker/docker_build.sh octop:dev --no-cache
 #
 # 国内加速（可选，需 BuildKit，本脚本默认已开启）:
@@ -22,7 +22,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-IMAGE_TAG="${1:-octop:latest}"
+IMAGE_TAG="${1:-mingdian:latest}"
 shift 2>/dev/null || true
 
 # BuildKit 启用 Dockerfile 缓存挂载，加速 npm / pip / apt 下载
@@ -62,7 +62,7 @@ echo ""
 echo "✅ 构建完成: ${IMAGE_TAG}"
 echo ""
 echo "启动示例:"
-echo "  docker run -d -p 8088:8088 -v octop-data:/data/.octop -e HOME=/data ${IMAGE_TAG}"
+echo "  docker run -d -p 8088:8088 -v mingdian-data:/data/.mingdian -e HOME=/data ${IMAGE_TAG}"
 echo ""
 echo "或使用 Compose:"
 echo "  docker compose -f docker/docker-compose.yml up -d"

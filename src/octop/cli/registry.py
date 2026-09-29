@@ -5,8 +5,8 @@ from __future__ import annotations
 # command name -> (relative module path, attribute name, short help)
 COMMANDS: dict[str, tuple[str, str, str]] = {
     "memory": (".commands.memory", "memory", "Live memory maintenance (backup and slim)."),
-    "init": (".commands.init", "init", "Bootstrap an Octop server install."),
-    "run": (".commands.run", "run", "Run octop-server in the foreground."),
+    "init": (".commands.init", "init", "Bootstrap a 华同明典 server install."),
+    "run": (".commands.run", "run", "Run mingdian server in the foreground."),
     "service": (
         ".commands.service",
         "service",
@@ -27,11 +27,11 @@ COMMANDS: dict[str, tuple[str, str, str]] = {
         "captcha",
         "Login captcha maintenance (lockout escape hatch).",
     ),
-    "version": (".commands.version", "version", "Show the installed octop version."),
+    "version": (".commands.version", "version", "Show the installed version."),
     "completion": (".commands.completion", "completion", "Shell completion utilities."),
-    "update": (".commands.update", "update", "Check for and install a newer Octop release."),
-    "clean": (".commands.clean", "clean", "Remove CLI state or wipe all of ~/.octop."),
-    "backup": (".commands.backup", "backup", "Export and restore Octop backups."),
-    "acp": (".commands.acp", "acp_cmd", "Run Octop agent as ACP server (stdio)."),
+    "update": (".commands.update", "update", "Check for and install a newer release."),
+    "clean": (".commands.clean", "clean", "Remove CLI state or wipe all data."),
+    "backup": (".commands.backup", "backup", "Export and restore backups."),
+    "acp": (".commands.acp", "acp_cmd", "Run agent as ACP server (stdio)."),
     "plugin": (".commands.plugin", "plugin", "Install and manage plugins."),
 }

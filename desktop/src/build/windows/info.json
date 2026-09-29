@@ -5,11 +5,11 @@
   "info": {
     "0000": {
       "ProductVersion": "0.9.26",
-      "CompanyName": "Octop",
-      "FileDescription": "Octop desktop",
-      "LegalCopyright": "Copyright © 2026",
-      "ProductName": "Octop",
-      "Comments": "Octop desktop shell"
+      "CompanyName": "华同律师事务所",
+      "FileDescription": "华同明典桌面端",
+      "LegalCopyright": "Copyright © 2026 华同律师事务所",
+      "ProductName": "华同明典",
+      "Comments": "华同明典桌面端"
     }
   }
 }

@@ -146,7 +146,21 @@ async def _iter_subprocess_lines(stream: asyncio.StreamReader) -> AsyncIterator[
 
 
 def octop_home() -> Path:
-    return Path(os.environ.get("OCTOP_HOME", Path.home() / ".octop"))
+    from octop.brand import ENV_HOME, HOME_DIR_NAME, LEGACY_ENV_HOME, LEGACY_HOME_DIR_NAME
+
+    primary = os.environ.get(ENV_HOME, "").strip()
+    if primary:
+        return Path(primary)
+    legacy = os.environ.get(LEGACY_ENV_HOME, "").strip()
+    if legacy:
+        return Path(legacy)
+    new_path = Path.home() / HOME_DIR_NAME
+    if new_path.is_dir():
+        return new_path
+    legacy_path = Path.home() / LEGACY_HOME_DIR_NAME
+    if legacy_path.is_dir():
+        return legacy_path
+    return new_path
 
 
 def desktop_state_dir() -> Path:

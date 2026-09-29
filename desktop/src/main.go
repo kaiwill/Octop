@@ -294,8 +294,8 @@ func main() {
 	}
 
 	app := application.New(application.Options{
-		Name:        "Octop",
-		Description: "Octop desktop",
+		Name:        "华同明典",
+		Description: "华同明典桌面端",
 		Services: []application.Service{
 			application.NewService(api),
 		},
@@ -319,7 +319,7 @@ func main() {
 	})
 
 	win := app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:                "Octop",
+		Title:                "华同明典",
 		Width:                1200,
 		Height:               800,
 		URL:                  "/",
@@ -342,7 +342,7 @@ func main() {
 	win.OnWindowEvent(events.Windows.WebViewNavigationCompleted, installDragOverlay)
 	win.OnWindowEvent(events.Linux.WindowLoadFinished, installDragOverlay)
 	settingsWin := app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:            "Octop 设置",
+		Title:            "华同明典设置",
 		Width:            settingsWindowWidth,
 		Height:           settingsWindowOuterHeight(),
 		URL:              "/?settings=1",
@@ -386,7 +386,7 @@ func main() {
 
 	tray := app.SystemTray.New()
 	applyTrayIcon(tray)
-	tray.SetTooltip("Octop")
+	tray.SetTooltip("华同明典")
 	tray.AttachWindow(settingsWin).WindowOffset(6)
 	showSettings := func() { tray.ShowWindow() }
 	if trayLeftClickShowsSettings(runtime.GOOS) {

@@ -10,7 +10,7 @@ from fastapi.openapi.utils import get_openapi
 from octop.api.deps import is_jwt_exempt_path
 
 API_DESCRIPTION = """\
-**Octop** is a smarter, self-hosted AI assistant for multiple users and agents. All routes are served under `/api`.
+**华同明典**是华同律师事务所自研的智能办案助手。所有接口统一挂载在 `/api` 路径下。
 
 ## Authentication
 
