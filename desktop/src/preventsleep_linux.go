@@ -18,8 +18,8 @@ func startSleepInhibitor() (func(), error) {
 		"org.freedesktop.login1.Manager.Inhibit",
 		0,
 		"idle:sleep",
-		"Octop",
-		"Octop desktop is running",
+		"华同明典",
+		"华同明典 desktop 正在运行",
 		"block",
 	)
 	if call.Err != nil {
