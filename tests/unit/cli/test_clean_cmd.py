@@ -20,7 +20,7 @@ def test_clean_default_removes_only_cli_state(fake_home: Path) -> None:
     state = fake_home / ".octop" / "cli_state.json"
     state.parent.mkdir(parents=True)
     state.write_text("{}")
-    db = fake_home / ".octop" / "octop.db"
+    db = fake_home / ".octop" / "mingdian.db"
     db.write_text("DB-CONTENT")
 
     runner = CliRunner()
@@ -32,7 +32,7 @@ def test_clean_default_removes_only_cli_state(fake_home: Path) -> None:
 
 
 def test_clean_all_requires_confirmation(fake_home: Path) -> None:
-    db = fake_home / ".octop" / "octop.db"
+    db = fake_home / ".octop" / "mingdian.db"
     db.parent.mkdir(parents=True)
     db.write_text("DB-CONTENT")
 

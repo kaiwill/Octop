@@ -10,7 +10,7 @@ from octop.infra.utils.paths import PathLayout
 def test_root_paths(tmp_path: Path):
     p = PathLayout(tmp_path / ".octop")
     assert p.root == tmp_path / ".octop"
-    assert p.db == tmp_path / ".octop" / "octop.db"
+    assert p.db == tmp_path / ".octop" / "mingdian.db"
     assert p.logs_dir == tmp_path / ".octop" / "logs"
     assert p.log == tmp_path / ".octop" / "logs" / "octop.log"
     assert p.config == tmp_path / ".octop" / "config.json"
@@ -60,9 +60,10 @@ def test_knowledge_dir(tmp_path: Path) -> None:
     assert p.knowledge_dir == tmp_path / ".octop" / "knowledge"
 
 
-def test_path_layout_from_env_defaults_to_dot_octop(monkeypatch) -> None:
+def test_path_layout_from_env_defaults_to_dot_mingdian(monkeypatch) -> None:
+    monkeypatch.delenv("MINGDIAN_HOME", raising=False)
     monkeypatch.delenv("OCTOP_HOME", raising=False)
-    assert PathLayout.from_env().root == Path.home() / ".octop"
+    assert PathLayout.from_env().root == Path.home() / ".mingdian"
 
 
 def test_path_layout_from_env_honors_octop_home(monkeypatch, tmp_path: Path) -> None:

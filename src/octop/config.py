@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote_plus, urlparse
 
+from octop.brand import DB_FILENAME
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_MAX_UPLOAD_MB = 100
@@ -41,7 +43,7 @@ class DatabaseConfig:
     """Database connection settings (SQLite or PostgreSQL)."""
 
     driver: str = "sqlite"
-    sqlite_path: str = "octop.db"
+    sqlite_path: str = DB_FILENAME
     host: str = "127.0.0.1"
     port: int = 5432
     database: str = "octop"
@@ -333,7 +335,7 @@ def parse_database_config(merged: dict[str, Any]) -> DatabaseConfig:
         raise ValueError(msg)
 
     if driver == "sqlite":
-        sqlite_path = str(merged.get("sqlite_path", "octop.db")).strip()
+        sqlite_path = str(merged.get("sqlite_path", DB_FILENAME)).strip()
         if not sqlite_path:
             raise ValueError("database.sqlite_path must not be empty")
         return DatabaseConfig(driver=driver, sqlite_path=sqlite_path)

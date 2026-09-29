@@ -108,7 +108,7 @@ func TestEnsurePortableUpgradesBundledVersionAfterDatabaseBackup(t *testing.T) {
 	if err := unzipGreen(oldZip, root); err != nil {
 		t.Fatal(err)
 	}
-	database := filepath.Join(home, "octop.db")
+	database := filepath.Join(home, "mingdian.db")
 	if err := os.WriteFile(database, []byte("database"), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -148,7 +148,7 @@ func TestEnsurePortableKeepsRuntimeWhenDatabaseBackupFails(t *testing.T) {
 	if err := unzipGreen(oldZip, root); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(home, "octop.db"), []byte("database"), 0o600); err != nil {
+	if err := os.WriteFile(filepath.Join(home, "mingdian.db"), []byte("database"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	newZip := filepath.Join(t.TempDir(), "new.zip")

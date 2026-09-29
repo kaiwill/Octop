@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from octop.brand import (
+    DB_FILENAME,
     ENV_HOME,
     HOME_DIR_NAME,
     LEGACY_ENV_HOME,
@@ -41,7 +42,7 @@ class PathLayout:
 
     @property
     def db(self) -> Path:
-        return self.root / "octop.db"
+        return self.root / DB_FILENAME
 
     @property
     def logs_dir(self) -> Path:

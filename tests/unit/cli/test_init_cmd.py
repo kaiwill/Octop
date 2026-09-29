@@ -39,7 +39,7 @@ def test_init_non_interactive_creates_admin(fake_home: Path) -> None:
     )
     assert result.exit_code == 0, result.output
     assert (fake_home / ".octop").is_dir()
-    assert (fake_home / ".octop" / "octop.db").is_file()
+    assert (fake_home / ".octop" / "mingdian.db").is_file()
     # New catalog plugins are installed via the marketplace, not auto-seeded.
     weather = fake_home / ".octop" / "plugins" / "weather" / "plugin.yaml"
     assert not weather.is_file()
