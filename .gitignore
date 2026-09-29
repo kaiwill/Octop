@@ -104,3 +104,9 @@ scripts/dev-local-link.sh
 docs/superpowers/
 scripts/lh_image_install_octop_tencentos.sh
 .worktrees/
+
+# Local tooling artifacts (not for upstream)
+.playwright-cli/
+.qoder/
+.learnings/
+.venv.bak/
