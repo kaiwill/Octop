@@ -262,11 +262,11 @@ export default function LoginPage() {
           src={
             isDark ? "/logo_horizontal_white.png" : "/logo_horizontal_dark.png"
           }
-          alt="Octop"
+          alt="华同明典"
           style={{
-            height: 48,
+            height: 56,
             width: "auto",
-            maxWidth: 260,
+            maxWidth: 300,
             objectFit: "contain",
             display: "block",
           }}
