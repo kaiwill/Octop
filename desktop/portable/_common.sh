@@ -26,19 +26,19 @@ ALL_PLATS=(
 # Public GitHub Release names: Mingdian-<kind>-<os>-<arch>-<version>.<ext>
 # Zip payload directory stays Mingdian-<plat>/ (the desktop unzip strips the first
 # path component). PyPI wheels keep the PEP 427 name and are not renamed here.
-octop_version() {
+mingdian_version() {
   sed -nE 's/^version[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' \
     "${REPO_ROOT}/pyproject.toml" | head -1
 }
 
 portable_zip_basename() {
-  echo "Mingdian-portable-${1}-$(octop_version).zip"
+  echo "Mingdian-portable-${1}-$(mingdian_version).zip"
 }
 
 desktop_pkg_basename() {
   local plat="$1"
   local ver
-  ver="$(octop_version)"
+  ver="$(mingdian_version)"
   case "$plat" in
     darwin-*) echo "Mingdian-desktop-${plat}-${ver}.dmg" ;;
     windows-*) echo "Mingdian-desktop-${plat}-${ver}.exe" ;;

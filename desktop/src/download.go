@@ -198,8 +198,11 @@ func zipEntryVersion(files []*zip.File, match func(string) bool, parse func(stri
 
 func versionFromText(text string) string {
 	for _, line := range strings.Split(text, "\n") {
-		if value, ok := strings.CutPrefix(strings.TrimSpace(line), "octop_version="); ok {
-			return strings.TrimSpace(value)
+		// Legacy key: portable zips built before the Mingdian rebrand.
+		for _, key := range []string{"mingdian_version=", "octop_version="} {
+			if value, ok := strings.CutPrefix(strings.TrimSpace(line), key); ok {
+				return strings.TrimSpace(value)
+			}
 		}
 	}
 	return ""

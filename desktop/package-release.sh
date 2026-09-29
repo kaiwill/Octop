@@ -65,7 +65,7 @@ if [[ "$plat" == windows-* ]] && ! command -v makensis >/dev/null 2>&1; then
 fi
 
 arch="${plat##*-}"
-ver="$(octop_version)"
+ver="$(mingdian_version)"
 portable_zip="${REPO_ROOT}/desktop/portable/release/$(portable_zip_basename "$plat")"
 
 echo "[desktop-release] platform=${plat}"

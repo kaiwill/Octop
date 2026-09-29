@@ -250,7 +250,7 @@ assemble_one() {
     echo "platform=${plat}"
     echo "python=${PBS_PY}"
     echo "pbs_tag=${PBS_TAG}"
-    sed -n 's/^version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/octop_version=\1/p' \
+    sed -n 's/^version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/mingdian_version=\1/p' \
       "${REPO_ROOT}/pyproject.toml" | head -1
   } > "${staging}/VERSION.txt"
 

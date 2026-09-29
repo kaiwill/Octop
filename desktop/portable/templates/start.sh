@@ -34,7 +34,7 @@ while [[ $# -gt 0 ]]; do
       cat <<EOF
 Mingdian green portable launcher
 
-Usage: ./start.sh [--home DIR] [--host HOST] [--port PORT] [octop run args...]
+Usage: ./start.sh [--home DIR] [--host HOST] [--port PORT] [mingdian run args...]
 
 Defaults:
   OCTOP_HOME / --home   ${ROOT}/data

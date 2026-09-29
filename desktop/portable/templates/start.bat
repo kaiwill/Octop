@@ -56,7 +56,7 @@ goto parse
 :help
 echo Mingdian green portable launcher
 echo.
-echo Usage: start.bat [--home DIR] [--host HOST] [--port PORT] [octop run args...]
+echo Usage: start.bat [--home DIR] [--host HOST] [--port PORT] [mingdian run args...]
 echo.
 echo Defaults:
 echo   OCTOP_HOME / --home   %%ROOT%%\data

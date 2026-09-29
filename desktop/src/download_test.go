@@ -179,7 +179,7 @@ func TestEnsurePortableKeepsNewerExistingRuntime(t *testing.T) {
 	}
 	if err := os.WriteFile(
 		filepath.Join(root, "VERSION.txt"),
-		[]byte("octop_version=0.9.31\n"),
+		[]byte("mingdian_version=0.9.31\n"),
 		0o644,
 	); err != nil {
 		t.Fatal(err)
@@ -288,6 +288,22 @@ func TestCompareVersions(t *testing.T) {
 	} {
 		if got := compareVersions(test.left, test.right); got != test.want {
 			t.Fatalf("compareVersions(%q, %q) = %d, want %d", test.left, test.right, got, test.want)
+		}
+	}
+}
+
+func TestVersionFromTextReadsCurrentAndLegacyKeys(t *testing.T) {
+	for _, test := range []struct {
+		name string
+		text string
+		want string
+	}{
+		{"current", "platform=windows-amd64\nmingdian_version=1.0.2b4\n", "1.0.2b4"},
+		{"legacy", "platform=windows-amd64\noctop_version=0.9.31\n", "0.9.31"},
+		{"missing", "platform=windows-amd64\n", ""},
+	} {
+		if got := versionFromText(test.text); got != test.want {
+			t.Fatalf("%s: versionFromText = %q, want %q", test.name, got, test.want)
 		}
 	}
 }
@@ -416,7 +432,7 @@ func writeTestGreenZip(t *testing.T, path, version string) {
 		header := &zip.FileHeader{Name: name, Method: zip.Store}
 		content := []byte("test executable payload")
 		if strings.HasSuffix(name, "/VERSION.txt") {
-			content = []byte("platform=test\noctop_version=" + version + "\n")
+			content = []byte("platform=test\nmingdian_version=" + version + "\n")
 		} else if strings.HasSuffix(name, "/METADATA") {
 			content = []byte("Name: octop\nVersion: " + version + "\n")
 		} else if strings.HasSuffix(name, "/python3") {
@@ -477,7 +493,7 @@ func writeVersionOnlyZip(t *testing.T, path, version string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := entry.Write([]byte("octop_version=" + version + "\n")); err != nil {
+	if _, err := entry.Write([]byte("mingdian_version=" + version + "\n")); err != nil {
 		t.Fatal(err)
 	}
 	if err := w.Close(); err != nil {

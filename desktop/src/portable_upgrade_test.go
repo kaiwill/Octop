@@ -22,7 +22,7 @@ func TestPortableVersionPrefersNewestPackageMetadata(t *testing.T) {
 			t.Fatal(err)
 		}
 		if versionIndex == 0 {
-			if err := os.WriteFile(filepath.Join(root, "VERSION.txt"), []byte("octop_version=0.9.28\n"), 0o644); err != nil {
+			if err := os.WriteFile(filepath.Join(root, "VERSION.txt"), []byte("mingdian_version=0.9.28\n"), 0o644); err != nil {
 				t.Fatal(err)
 			}
 		}
