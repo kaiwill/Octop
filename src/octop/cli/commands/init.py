@@ -115,8 +115,10 @@ def init(
     finally:
         db.close()
 
-    from octop.brand import DISPLAY_NAME, CLI_NAME
+    from octop.brand import CLI_NAME, DISPLAY_NAME
 
     click.echo(f"\u2705 {DISPLAY_NAME} bootstrapped at {home}")
     click.echo(f"   admin user: {username}")
-    click.echo(f"   next: `{CLI_NAME} run` (optional: `{CLI_NAME} agent use <id>` to pin default agent)")
+    click.echo(
+        f"   next: `{CLI_NAME} run` (optional: `{CLI_NAME} agent use <id>` to pin default agent)"
+    )
