@@ -1,5 +1,5 @@
 #!/bin/bash
-# Desktop shell against a source server (hot reload). Not ~/.octop/portable.
+# Desktop shell against a source server (hot reload). Not ~/.mingdian/portable.
 # Starts the server in this shell and stops it when wails3 / this script exits.
 set -euo pipefail
 

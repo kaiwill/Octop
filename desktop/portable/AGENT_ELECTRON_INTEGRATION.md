@@ -35,7 +35,7 @@ Mingdian-<plat>/
 4. Set `OCTOP_HOME` to Mingdian's default data dir (`~/.octop`, or `$OCTOP_HOME`
    if already set). Do **not** use the zip's `./data` folder when launching
    from the Wails desktop shell (`desktop/src`).
-   Extract the zip under `~/.octop/portable/` so runtime files stay next to
+   Extract the zip under `~/.mingdian/portable/` so runtime files stay next to
    user data without overwriting `octop.db`.
 5. Set `PYTHONNOUSERSITE=1` and `OCTOP_GREEN_PACKAGES=<extract>/packages`.
    **Do not set `PYTHONPATH`.**

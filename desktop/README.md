@@ -13,9 +13,10 @@ All desktop-client code lives here. This is **not** `src/octop/infra/desktop`
 
 Same as the CLI/server default:
 
-- `OCTOP_HOME` → `~/.octop` (or the existing `OCTOP_HOME` env)
-- Green runtime extract → `~/.octop/portable/`
-- Shell prefs → `~/.octop/desktop-settings.json`
+- `MINGDIAN_HOME` → `OCTOP_HOME` → `~/.mingdian` → `~/.octop` (existing
+  pre-rebrand installs keep using their data), falling back to `~/.mingdian`
+- Green runtime extract → `~/.mingdian/portable/`
+- Shell prefs → `~/.mingdian/desktop-settings.json`
 
 ## Build green zip
 
@@ -69,13 +70,13 @@ cd desktop/src
 OCTOP_DESKTOP_URL=http://127.0.0.1:8088 wails3 dev
 ```
 
-Without `OCTOP_DESKTOP_URL`, first launch uses `~/.octop/portable/` if valid,
+Without `OCTOP_DESKTOP_URL`, first launch uses `~/.mingdian/portable/` if valid,
 otherwise extracts the matching zip shipped with the desktop package (embedded
 in the Windows and Linux binaries, under `Contents/Resources` on macOS). The
 Wails shell never downloads anything. For local runtime debugging, set
 `OCTOP_DESKTOP_PORTABLE_ZIP=/absolute/path/Mingdian-portable-<plat>-<version>.zip`.
 On later launches, a newer bundled portable version replaces the extracted
-runtime after creating a consistent SQLite backup under `~/.octop/backups/`.
+runtime after creating a consistent SQLite backup under `~/.mingdian/backups/`.
 The upgraded server process then applies the normal database migrations during
 startup. Newer extracted runtimes are never downgraded; PostgreSQL remains
 externally managed and is not copied by the desktop shell.

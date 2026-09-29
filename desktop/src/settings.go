@@ -15,7 +15,15 @@ const (
 	LocaleEN Locale = "en"
 )
 
-// Settings is persisted at ~/.octop/desktop-settings.json
+// Mirrors brand.py. Keep in sync with octop/infra/utils/paths.py PathLayout.
+const (
+	envHome           = "MINGDIAN_HOME"
+	legacyEnvHome     = "OCTOP_HOME"
+	homeDirName       = ".mingdian"
+	legacyHomeDirName = ".octop"
+)
+
+// Settings is persisted at ~/.mingdian/desktop-settings.json
 type Settings struct {
 	Locale         Locale `json:"locale"`
 	Autostart      bool   `json:"autostart"`
@@ -34,15 +42,35 @@ func defaultSettings() Settings {
 	}
 }
 
+func isDir(path string) bool {
+	info, err := os.Stat(path)
+	return err == nil && info.IsDir()
+}
+
+// octopHome resolves the data directory with the same priority the Python side
+// uses (PathLayout.from_env): MINGDIAN_HOME > OCTOP_HOME > ~/.mingdian >
+// ~/.octop, falling back to ~/.mingdian for fresh installs. The ~/.octop probe
+// keeps an existing pre-rebrand install on its current data.
 func octopHome() string {
-	if v := os.Getenv("OCTOP_HOME"); v != "" {
+	if v := os.Getenv(envHome); v != "" {
+		return v
+	}
+	if v := os.Getenv(legacyEnvHome); v != "" {
 		return v
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return ".octop"
+		return homeDirName
 	}
-	return filepath.Join(home, ".octop")
+	newPath := filepath.Join(home, homeDirName)
+	if isDir(newPath) {
+		return newPath
+	}
+	legacyPath := filepath.Join(home, legacyHomeDirName)
+	if isDir(legacyPath) {
+		return legacyPath
+	}
+	return newPath
 }
 
 func portableDir() string {
