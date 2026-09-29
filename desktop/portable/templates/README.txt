@@ -1,8 +1,8 @@
-Octop green portable package
-============================
+Mingdian (华同明典) green portable package
+==========================================
 
-Extract this zip anywhere. It includes a portable CPython runtime and Octop
-dependencies. No system Python install is required.
+Extract this zip anywhere. It includes a portable CPython runtime and all
+Mingdian dependencies. No system Python install is required.
 
 Start
 -----
@@ -13,12 +13,12 @@ Defaults: http://127.0.0.1:8088   data dir = ./data (OCTOP_HOME)
 
   ./start.sh --home /path/to/data --host 127.0.0.1 --port 8088
 
-First launch follows the normal Octop setup wizard (create admin password).
+First launch follows the normal Mingdian setup wizard (create admin password).
 
 Layout
 ------
   runtime/     portable CPython
-  packages/    Octop + locked dependencies (site-packages)
+  packages/    Mingdian + locked dependencies (site-packages)
   launch.py    entry bootstrap (loads packages/ + Windows pywin32 DLLs)
   start.sh / start.bat
   README.txt

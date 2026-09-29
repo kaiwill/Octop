@@ -7,6 +7,8 @@ import json
 import plistlib
 from pathlib import Path
 
+import pytest
+
 _STAMP = Path(__file__).resolve().parents[3] / "desktop" / "src" / "build" / "stamp_version.py"
 _SPEC = importlib.util.spec_from_file_location("octop_desktop_stamp_version", _STAMP)
 assert _SPEC is not None and _SPEC.loader is not None
@@ -117,9 +119,14 @@ def test_stamp_manifest_pep440_prerelease(tmp_path: Path) -> None:
     assert 'name="com.tencent.octop" version="1.0.2.0"' in text
 
 
+_INFO_JSON = (
+    Path(__file__).resolve().parents[3] / "desktop" / "src" / "build" / "windows" / "info.json"
+)
+
+
 def test_write_nsis_defines_pep440(tmp_path: Path) -> None:
     dest = tmp_path / "version_defines.nsh"
-    stamp_version.write_nsis_defines(dest, "1.0.2b1")
+    stamp_version.write_nsis_defines(dest, "1.0.2b1", "Mingdian", _INFO_JSON)
     text = dest.read_text(encoding="utf-8")
     assert '!define INFO_PRODUCTVERSION "1.0.2b1"' in text
     assert '!define INFO_FILEVERSION "1.0.2.0"' in text
@@ -127,7 +134,28 @@ def test_write_nsis_defines_pep440(tmp_path: Path) -> None:
 
 def test_write_nsis_defines_dev(tmp_path: Path) -> None:
     dest = tmp_path / "version_defines.nsh"
-    stamp_version.write_nsis_defines(dest, "dev")
+    stamp_version.write_nsis_defines(dest, "dev", "Mingdian", _INFO_JSON)
     text = dest.read_text(encoding="utf-8")
     assert '!define INFO_PRODUCTVERSION "dev"' in text
     assert '!define INFO_FILEVERSION "0.0.0.0"' in text
+
+
+def test_write_nsis_defines_carries_brand_strings(tmp_path: Path) -> None:
+    """wails_tools.nsh only defines these as !ifndef fallbacks — we must not omit them."""
+    dest = tmp_path / "version_defines.nsh"
+    stamp_version.write_nsis_defines(dest, "1.0.2b1", "Mingdian", _INFO_JSON)
+    text = dest.read_text(encoding="utf-8")
+    assert '!define INFO_PROJECTNAME "Mingdian"' in text
+    assert '!define INFO_COMPANYNAME "华同律师事务所"' in text
+    assert '!define INFO_PRODUCTNAME "华同明典"' in text
+    assert '!define INFO_COPYRIGHT "Copyright © 2026 华同律师事务所"' in text
+    assert "Octop" not in text
+
+
+def test_brand_defines_rejects_incomplete_info_json(tmp_path: Path) -> None:
+    info = tmp_path / "info.json"
+    info.write_text(json.dumps({"info": {"0000": {"ProductName": "华同明典"}}}), encoding="utf-8")
+    with pytest.raises(SystemExit) as excinfo:
+        stamp_version.brand_defines("Mingdian", info)
+    assert "CompanyName" in str(excinfo.value)
+    assert "LegalCopyright" in str(excinfo.value)

@@ -40,7 +40,7 @@ func TestEnsurePortableUsesBundledPackage(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("OCTOP_HOME", home)
 
-	zipPath := filepath.Join(t.TempDir(), "Octop-"+greenPlat()+".zip")
+	zipPath := filepath.Join(t.TempDir(), "Mingdian-"+greenPlat()+".zip")
 	t.Setenv("OCTOP_DESKTOP_PORTABLE_ZIP", zipPath)
 	writeTestGreenZip(t, zipPath, "1.0.0")
 
@@ -400,16 +400,16 @@ func writeTestGreenZip(t *testing.T, path, version string) {
 	}
 	w := zip.NewWriter(f)
 	files := []string{
-		"Octop-test/launch.py",
-		"Octop-test/VERSION.txt",
-		"Octop-test/packages/octop-" + version + ".dist-info/METADATA",
+		"Mingdian-test/launch.py",
+		"Mingdian-test/VERSION.txt",
+		"Mingdian-test/packages/octop-" + version + ".dist-info/METADATA",
 	}
 	if runtime.GOOS == "windows" {
-		files = append(files, "Octop-test/runtime/python.exe")
+		files = append(files, "Mingdian-test/runtime/python.exe")
 	} else {
 		files = append(files,
-			"Octop-test/runtime/bin/python3",
-			"Octop-test/runtime/bin/python3.12",
+			"Mingdian-test/runtime/bin/python3",
+			"Mingdian-test/runtime/bin/python3.12",
 		)
 	}
 	for _, name := range files {
@@ -451,7 +451,7 @@ func writeMetadataOnlyZip(t *testing.T, path, version string) {
 		t.Fatal(err)
 	}
 	w := zip.NewWriter(f)
-	entry, err := w.Create("Octop-test/packages/octop-" + version + ".dist-info/METADATA")
+	entry, err := w.Create("Mingdian-test/packages/octop-" + version + ".dist-info/METADATA")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -473,7 +473,7 @@ func writeVersionOnlyZip(t *testing.T, path, version string) {
 		t.Fatal(err)
 	}
 	w := zip.NewWriter(f)
-	entry, err := w.Create("Octop-test/VERSION.txt")
+	entry, err := w.Create("Mingdian-test/VERSION.txt")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,26 +1,30 @@
-# Shared NSIS helpers for the Octop desktop installer.
+# Shared NSIS helpers for the Mingdian desktop installer.
 # INFO_PRODUCTVERSION: display string (pep440 OK, e.g. 1.0.2b1).
 # INFO_FILEVERSION: numeric X.X.X.X for VIProductVersion / VIFileVersion
-# (stamp_version.py four-part). Fallbacks below are for local makensis without -D.
+# (stamp_version.py four-part).
+# INFO_PROJECTNAME / INFO_COMPANYNAME / INFO_PRODUCTNAME / INFO_COPYRIGHT: brand.
+# project.nsi includes version_defines.nsh (written by stamp_version.py nsis-defines,
+# from build/windows/info.json) before this file, so these !ifndef fallbacks only
+# apply to a bare `makensis project.nsi` with no build pipeline. Keep them branded.
 
 !include "x64.nsh"
 !include "WinVer.nsh"
 !include "FileFunc.nsh"
 
 !ifndef INFO_PROJECTNAME
-    !define INFO_PROJECTNAME "Octop"
+    !define INFO_PROJECTNAME "Mingdian"
 !endif
 !ifndef INFO_COMPANYNAME
-    !define INFO_COMPANYNAME "Octop"
+    !define INFO_COMPANYNAME "华同律师事务所"
 !endif
 !ifndef INFO_PRODUCTNAME
-    !define INFO_PRODUCTNAME "Octop"
+    !define INFO_PRODUCTNAME "华同明典"
 !endif
 !ifndef INFO_PRODUCTVERSION
     !define INFO_PRODUCTVERSION "0.9.31"
 !endif
 !ifndef INFO_COPYRIGHT
-    !define INFO_COPYRIGHT "(c) 2026, Octop"
+    !define INFO_COPYRIGHT "Copyright © 2026 华同律师事务所"
 !endif
 !ifndef PRODUCT_EXECUTABLE
     !define PRODUCT_EXECUTABLE "${INFO_PROJECTNAME}.exe"

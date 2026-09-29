@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stamp the Octop version into Wails desktop metadata copies."""
+"""Stamp the product version and brand into Wails desktop metadata copies."""
 
 from __future__ import annotations
 
@@ -99,8 +99,32 @@ def stamp_manifest(src: Path, dest: Path, version: str) -> None:
     dest.write_text(updated, encoding="utf-8")
 
 
-def write_nsis_defines(path: Path, version: str) -> None:
-    """Write ``!define`` lines for NSIS (display + numeric VI*Version)."""
+def _nsis_quote(value: str) -> str:
+    """Escape a value for a double-quoted NSIS ``!define`` string."""
+    return value.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def brand_defines(project_name: str, info_json: Path) -> dict[str, str]:
+    """Read the installer brand strings from the checked-in ``windows/info.json``.
+
+    wails_tools.nsh only falls back to the upstream "Octop" placeholders via
+    ``!ifndef``, so project.nsi (which includes this file first) must define them.
+    """
+    data = json.loads(info_json.read_text(encoding="utf-8"))
+    info = data.get("info", {}).get("0000", {})
+    missing = [key for key in ("CompanyName", "ProductName", "LegalCopyright") if not info.get(key)]
+    if missing:
+        raise SystemExit(f"{info_json} is missing {', '.join(missing)}")
+    return {
+        "INFO_PROJECTNAME": project_name,
+        "INFO_COMPANYNAME": info["CompanyName"],
+        "INFO_PRODUCTNAME": info["ProductName"],
+        "INFO_COPYRIGHT": info["LegalCopyright"],
+    }
+
+
+def write_nsis_defines(path: Path, version: str, project_name: str, info_json: Path) -> None:
+    """Write ``!define`` lines for NSIS (brand + display + numeric VI*Version)."""
     product = version.strip() or "dev"
     filever = four_part_version(product)
     if filever is None:
@@ -108,10 +132,15 @@ def write_nsis_defines(path: Path, version: str) -> None:
             filever = "0.0.0.0"
         else:
             raise SystemExit(f"cannot map version to X.X.X.X: {product!r}")
+    defines = {
+        **brand_defines(project_name, info_json),
+        "INFO_PRODUCTVERSION": product,
+        "INFO_FILEVERSION": filever,
+    }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         # Included by project.nsi before wails_tools.nsh (!ifndef guards).
-        f'!define INFO_PRODUCTVERSION "{product}"\n!define INFO_FILEVERSION "{filever}"\n',
+        "".join(f'!define {key} "{_nsis_quote(value)}"\n' for key, value in defines.items()),
         encoding="utf-8",
     )
 
@@ -142,10 +171,17 @@ def main(argv: list[str] | None = None) -> int:
 
     nsis_p = sub.add_parser(
         "nsis-defines",
-        help="Write INFO_PRODUCTVERSION / INFO_FILEVERSION !define lines for project.nsi",
+        help="Write INFO_* !define lines (brand + version) for project.nsi",
     )
     nsis_p.add_argument("version")
     nsis_p.add_argument("path", type=Path)
+    nsis_p.add_argument("--project-name", required=True, help="Binary name (INFO_PROJECTNAME)")
+    nsis_p.add_argument(
+        "--info-json",
+        type=Path,
+        required=True,
+        help="windows/info.json providing CompanyName / ProductName / LegalCopyright",
+    )
 
     args = parser.parse_args(argv)
     if args.cmd == "plist":
@@ -158,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit(f"cannot map version to X.X.X.X: {args.version!r}")
         print(dotted)
     elif args.cmd == "nsis-defines":
-        write_nsis_defines(args.path, args.version)
+        write_nsis_defines(args.path, args.version, args.project_name, args.info_json)
     else:
         stamp_manifest(args.src, args.dest, args.version)
     return 0

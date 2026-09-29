@@ -1,10 +1,10 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
-rem Octop green portable launcher (Windows)
+rem Mingdian green portable launcher (Windows)
 rem Usage:
 rem   start.bat
-rem   start.bat --home D:\octop-data
+rem   start.bat --home D:\mingdian-data
 rem   start.bat --home .\data --host 0.0.0.0 --port 8088
 
 set "ROOT=%~dp0"
@@ -54,7 +54,7 @@ shift
 goto parse
 
 :help
-echo Octop green portable launcher
+echo Mingdian green portable launcher
 echo.
 echo Usage: start.bat [--home DIR] [--host HOST] [--port PORT] [octop run args...]
 echo.
@@ -82,7 +82,7 @@ rem Prefer launch.py (site.addsitedir + pywin32 DLL path). Do not set PYTHONPATH
 set "PYTHONNOUSERSITE=1"
 set "PYTHONPATH="
 
-echo [octop] home=%OCTOP_HOME%
-echo [octop] http://%HOST%:%PORT%
+echo [mingdian] home=%OCTOP_HOME%
+echo [mingdian] http://%HOST%:%PORT%
 "%PY%" "%ROOT%\launch.py" run --host %HOST% --port %PORT% %EXTRA%
 exit /b %ERRORLEVEL%
