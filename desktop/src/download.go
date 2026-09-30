@@ -392,10 +392,11 @@ func unzipGreenFiles(files []*zip.File, dest string) error {
 func waitHealth(locale Locale, base string, timeout time.Duration) error {
 	deadline := time.Now().Add(timeout)
 	url := strings.TrimRight(base, "/") + "/api/health"
+	client := &http.Client{Timeout: 5 * time.Second}
 	var lastErr error
 	var lastStatus int
 	for time.Now().Before(deadline) {
-		resp, err := http.Get(url)
+		resp, err := client.Get(url)
 		if err == nil {
 			lastStatus = resp.StatusCode
 			lastErr = nil

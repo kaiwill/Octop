@@ -165,3 +165,26 @@ func TestSettingsWindowSizeFitsContent(t *testing.T) {
 		t.Fatal("outer height must be at least the content height")
 	}
 }
+
+func TestSplashNavigatesWithoutRacingTheWebview(t *testing.T) {
+	html, err := os.ReadFile("assets/index.html")
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := string(html)
+	for _, needle := range []string{
+		`call("GetDashboardURL")`,
+		`call("GetBootStatus")`,
+		`window.location.replace(url)`,
+		`Events.On("desktop:status"`,
+	} {
+		if !strings.Contains(body, needle) {
+			t.Fatalf("splash HTML missing %q", needle)
+		}
+	}
+	onAt := strings.Index(body, `Events.On("desktop:status"`)
+	awaitAt := strings.Index(body, `s = await call("GetSettingsStatus")`)
+	if onAt < 0 || awaitAt < 0 || onAt > awaitAt {
+		t.Fatal("status listener must be registered before awaiting GetSettingsStatus")
+	}
+}

@@ -32,6 +32,12 @@ type App struct {
 	mu             sync.Mutex
 	quitting       bool
 
+	navMu         sync.Mutex
+	dashboardBase string
+	bootStatus    string
+	winReady      bool
+	navigated     bool
+
 	trayClickMu    sync.Mutex
 	lastTrayClick  time.Time
 	trayClickTimer *time.Timer
@@ -101,6 +107,50 @@ func (a *App) ShowMain() {
 	a.showWindow()
 }
 
+// GetDashboardURL reports the dashboard URL once the runtime is ready. The
+// splash page polls this so navigation does not depend on the native webview
+// already existing when boot() finishes.
+func (a *App) GetDashboardURL() string {
+	a.navMu.Lock()
+	defer a.navMu.Unlock()
+	return a.dashboardBase
+}
+
+// GetBootStatus returns the most recent boot status line so the splash page can
+// recover it even if the startup event fired before the page registered.
+func (a *App) GetBootStatus() string {
+	a.navMu.Lock()
+	defer a.navMu.Unlock()
+	return a.bootStatus
+}
+
+// onWebviewLoadFinished marks the native webview as ready and, if boot() already
+// produced a dashboard URL, navigates to it. A SetURL issued while the webview is
+// still being created is a silent no-op, so the splash page also polls
+// GetDashboardURL and this hook retries once the first page has loaded.
+func (a *App) onWebviewLoadFinished() {
+	a.navMu.Lock()
+	a.winReady = true
+	a.navMu.Unlock()
+	a.scheduleDragOverlay()
+	a.navigateToDashboardWhenReady()
+}
+
+func (a *App) navigateToDashboardWhenReady() {
+	if a.window == nil {
+		return
+	}
+	a.navMu.Lock()
+	base := a.dashboardBase
+	if base == "" || !a.winReady || a.navigated {
+		a.navMu.Unlock()
+		return
+	}
+	a.navigated = true
+	a.navMu.Unlock()
+	a.window.SetURL(base)
+}
+
 func (a *App) HideSettings() {
 	if a.settingsWindow == nil {
 		return
@@ -150,6 +200,9 @@ func jsonString(s string) string {
 }
 
 func (a *App) setStatus(msg string) {
+	a.navMu.Lock()
+	a.bootStatus = msg
+	a.navMu.Unlock()
 	if a.app == nil {
 		return
 	}
@@ -199,7 +252,10 @@ func (a *App) showDashboard(base string) {
 	if a.window == nil {
 		return
 	}
-	a.window.SetURL(base)
+	a.navMu.Lock()
+	a.dashboardBase = base
+	a.navMu.Unlock()
+	a.navigateToDashboardWhenReady()
 	a.scheduleDragOverlay()
 	s := a.store.get()
 	go func() {
@@ -337,7 +393,7 @@ func main() {
 	app.Event.On("desktop:close", func(_ *application.CustomEvent) {
 		api.hideToTray()
 	})
-	installDragOverlay := func(_ *application.WindowEvent) { api.scheduleDragOverlay() }
+	installDragOverlay := func(_ *application.WindowEvent) { api.onWebviewLoadFinished() }
 	win.OnWindowEvent(events.Mac.WebViewDidFinishNavigation, installDragOverlay)
 	win.OnWindowEvent(events.Windows.WebViewNavigationCompleted, installDragOverlay)
 	win.OnWindowEvent(events.Linux.WindowLoadFinished, installDragOverlay)
